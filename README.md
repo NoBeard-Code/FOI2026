@@ -17,7 +17,9 @@ Razvijen u Blazor .NET 10 s Azure SQL bazom i deployom na Azure Container Apps.
 - Supplier (Dobavljač)
 - Stock (Zaliha)
 - Order (Narudžba)
+- DeliveryNote (Otpremnica)
 - OrderItem (Stavka narudžbe)
+- DeliveryNoteItem (Stavka otpremnice)
 - User / Role
 
 ## 🌿 Grane
