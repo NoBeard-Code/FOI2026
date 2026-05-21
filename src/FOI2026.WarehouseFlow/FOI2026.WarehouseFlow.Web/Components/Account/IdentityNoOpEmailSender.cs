@@ -1,4 +1,4 @@
-using FOI2026.WarehouseFlow.Web.Data;
+using FOI2026.WarehouseFlow.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 

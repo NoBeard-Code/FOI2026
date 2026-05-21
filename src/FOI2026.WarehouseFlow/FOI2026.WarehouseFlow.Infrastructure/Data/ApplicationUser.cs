@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace FOI2026.WarehouseFlow.Web.Data
+namespace FOI2026.WarehouseFlow.Infrastructure.Data
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser

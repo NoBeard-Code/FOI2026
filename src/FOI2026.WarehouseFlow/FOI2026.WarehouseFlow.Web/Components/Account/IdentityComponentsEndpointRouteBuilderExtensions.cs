@@ -2,7 +2,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using FOI2026.WarehouseFlow.Web.Components.Account.Pages;
 using FOI2026.WarehouseFlow.Web.Components.Account.Pages.Manage;
-using FOI2026.WarehouseFlow.Web.Data;
+using FOI2026.WarehouseFlow.Infrastructure.Data;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;

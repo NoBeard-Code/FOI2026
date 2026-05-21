@@ -1,9 +1,10 @@
 using FOI2026.WarehouseFlow.Web.Components;
 using FOI2026.WarehouseFlow.Web.Components.Account;
-using FOI2026.WarehouseFlow.Web.Data;
+using FOI2026.WarehouseFlow.Infrastructure.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using FOI2026.WarehouseFlow.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
