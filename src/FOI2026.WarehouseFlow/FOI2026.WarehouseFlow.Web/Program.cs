@@ -32,6 +32,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
         options.SignIn.RequireConfirmedAccount = true;
         options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
     })
+    .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
@@ -68,12 +69,19 @@ using (var scope = app.Services.CreateScope())
 {
     var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var role = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+
+    if (!ctx.Role.Any())
+    {
+        await role.CreateAsync(new ApplicationRole { Name = "Admin" });
+        await role.CreateAsync(new ApplicationRole { Name = "Worker" });
+    }
 
     if (!ctx.User.Any())
     {
         var admin = new ApplicationUser
         {
-            UserName = "admin@admin.com",
+            UserName = "admin",
             Email = "admin@admin.com",
             firstName = "Admin",
             lastName = "Admin",
@@ -81,7 +89,10 @@ using (var scope = app.Services.CreateScope())
             EmailConfirmed = true
         };
         await user.CreateAsync(admin, "Admin123!");
+        await user.AddToRoleAsync(admin, "Admin");
     }
+
+
 }
 
 
