@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FOI2026.WarehouseFlow.Infrastructure\FOI2026.WarehouseFlow.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
