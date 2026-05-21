@@ -67,8 +67,21 @@ app.MapAdditionalIdentityEndpoints();
 using (var scope = app.Services.CreateScope())
 {
     var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-
+    if (!ctx.User.Any())
+    {
+        var admin = new ApplicationUser
+        {
+            UserName = "admin@admin.com",
+            Email = "admin@admin.com",
+            firstName = "Admin",
+            lastName = "Admin",
+            isActive = true,
+            EmailConfirmed = true
+        };
+        await user.CreateAsync(admin, "Admin123!");
+    }
 }
 
 
