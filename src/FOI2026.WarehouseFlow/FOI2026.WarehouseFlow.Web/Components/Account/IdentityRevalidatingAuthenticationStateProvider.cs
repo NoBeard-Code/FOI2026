@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using FOI2026.WarehouseFlow.Infrastructure.Data;
+using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;

@@ -1,10 +1,9 @@
 using FOI2026.WarehouseFlow.Web.Components;
 using FOI2026.WarehouseFlow.Web.Components.Account;
-using FOI2026.WarehouseFlow.Infrastructure.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using FOI2026.WarehouseFlow.Infrastructure.Data;
+using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,5 +62,14 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+//probno seedanje kak na pozivu
+using (var scope = app.Services.CreateScope())
+{
+    var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+
+}
+
 
 app.Run();
