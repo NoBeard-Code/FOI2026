@@ -65,5 +65,17 @@ namespace FOI2026.WarehouseFlow.Services.Services
             await _articleRepository.DeleteAsync(id);
         }
 
+        public async Task<IEnumerable<Article>> SearchByNameOrCodeAsync(string searchTerm)
+        {
+            var articles = await GetAllArticlesWithStockAsync();
+
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return articles;
+
+            var normalizedTerm = searchTerm.Trim().ToLower();
+
+            return articles.Where(a => a.Name.ToLower().Contains(normalizedTerm)
+                                     || a.Code.ToLower().Contains(normalizedTerm));
+        }
     }
 }
