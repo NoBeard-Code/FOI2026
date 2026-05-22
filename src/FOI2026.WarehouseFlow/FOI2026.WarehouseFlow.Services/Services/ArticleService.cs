@@ -87,5 +87,17 @@ namespace FOI2026.WarehouseFlow.Services.Services
 
             return articles.Where(a => a.Status == status);
         }
+        public async Task<IEnumerable<Article>> FilterByCategoryAsync(int? categoryId, string? status)
+        {
+            var articles = await GetAllArticlesWithStockAsync();
+
+            if (categoryId.HasValue)
+                articles = articles.Where(a => a.CategoryId == categoryId.Value);
+
+            if (!string.IsNullOrWhiteSpace(status) && status != "Sve")
+                articles = articles.Where(a => a.Status == status);
+
+            return articles;
+        }
     }
 }
