@@ -49,5 +49,14 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<Article>> GetAllWithStockDataAsync()
+        {
+            return await _context.Articles
+                .Include(a => a.DeliveryNoteItems)
+                .Include(a => a.OrderItems)
+                .Include(a => a.Category)
+                .ToListAsync();
+        }
+
     }
 }
