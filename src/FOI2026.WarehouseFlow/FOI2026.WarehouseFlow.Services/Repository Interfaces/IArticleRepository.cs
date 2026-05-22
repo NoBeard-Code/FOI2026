@@ -8,10 +8,10 @@ namespace FOI2026.WarehouseFlow.Services.Repository_Interfaces
     public interface IArticleRepository
     {
 
-        public Task<IEnumerable<Article>> GetAllAsync();
-
-
-
-
+        Task<IEnumerable<Article>> GetAllAsync();
+        Task<Article> GetByIdAsync(int id);
+        Task AddAsync(Article article);
+        Task UpdateAsync(Article article);
+        Task DeleteAsync(int id);
     }
 }

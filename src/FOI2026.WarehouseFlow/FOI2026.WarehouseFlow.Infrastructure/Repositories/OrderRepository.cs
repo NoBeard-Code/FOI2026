@@ -1,4 +1,7 @@
-﻿using FOI2026.WarehouseFlow.Services.Repository_Interfaces;
+﻿using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
+using FOI2026.WarehouseFlow.Services;
+using FOI2026.WarehouseFlow.Services.Repository_Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,5 +10,45 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
+
+        private readonly ApplicationDbContext _context;
+
+        public OrderRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Order>> GetAllAsync()
+        {
+            return await _context.Orders.ToListAsync();
+        }
+
+        public async Task<Order?> GetByIdAsync(int id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
+
+        public async Task AddAsync(Order order)
+        {
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }
