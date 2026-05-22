@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260521195919_DodaniConstraintoviZaBrisanje")]
-    partial class DodaniConstraintoviZaBrisanje
+    [Migration("20260522094307_PocetnoKreiranje")]
+    partial class PocetnoKreiranje
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,19 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -105,17 +118,6 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("firstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("lastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -129,6 +131,52 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Article", b =>
+                {
+                    b.Property<int>("ArticleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArticleId"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("MaxStock")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinStock")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ArticleId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Articles");
+                });
+
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -137,16 +185,18 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
-                    b.Property<string>("description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNote", b =>
@@ -157,47 +207,41 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeliveryNoteId"));
 
-                    b.Property<int>("ItemId")
+                    b.Property<int>("ArticleId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int>("PartnerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("code")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("idItem")
-                        .HasColumnType("int");
-
-                    b.Property<int>("idPartner")
-                        .HasColumnType("int");
-
-                    b.Property<int>("idUser")
-                        .HasColumnType("int");
-
-                    b.Property<string>("status")
+                    b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("userId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("DeliveryNoteId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("ArticleId");
 
                     b.HasIndex("PartnerId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("DeliveryNote");
+                    b.ToTable("DeliveryNotes");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNoteItem", b =>
@@ -205,69 +249,20 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
                     b.Property<int>("DeliveryNoteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ItemId")
+                    b.Property<int>("ArticleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("itemQuantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("DeliveryNoteId", "ItemId");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("DeliveryNoteItem");
-                });
-
-            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Item", b =>
-                {
-                    b.Property<int>("ItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("currentStock")
-                        .HasColumnType("int");
-
-                    b.Property<string>("description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("idCategory")
-                        .HasColumnType("int");
-
-                    b.Property<int>("maxStock")
-                        .HasColumnType("int");
-
-                    b.Property<int>("minStock")
-                        .HasColumnType("int");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("price")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
-                    b.Property<string>("unit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("DeliveryNoteId", "ArticleId");
 
-                    b.HasKey("ItemId");
+                    b.HasIndex("ArticleId");
 
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Item");
+                    b.ToTable("DeliveryNoteItems");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Order", b =>
@@ -278,47 +273,41 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<int>("ItemId")
+                    b.Property<int>("ArticleId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int>("PartnerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("code")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("idItem")
-                        .HasColumnType("int");
-
-                    b.Property<int>("idPartner")
-                        .HasColumnType("int");
-
-                    b.Property<int>("idUser")
-                        .HasColumnType("int");
-
-                    b.Property<string>("status")
+                    b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("userId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("ArticleId");
 
                     b.HasIndex("PartnerId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.OrderItem", b =>
@@ -326,17 +315,20 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ItemId")
+                    b.Property<int>("ArticleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("itemQuantity")
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("OrderId", "ItemId");
+                    b.HasKey("OrderId", "ArticleId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("ArticleId");
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Partner", b =>
@@ -347,25 +339,32 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PartnerId"));
 
-                    b.Property<string>("address")
+                    b.Property<string>("Address")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Contact")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("contact")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsSupplier")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("oib")
+                    b.Property<int>("OIB")
+                        .HasMaxLength(11)
                         .HasColumnType("int");
 
                     b.HasKey("PartnerId");
 
-                    b.ToTable("Partner");
+                    b.ToTable("Partners");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -495,103 +494,107 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNote", b =>
+            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Article", b =>
                 {
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Item", "item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Partner", "partner")
-                        .WithMany("deliveryNotes")
-                        .HasForeignKey("PartnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.ApplicationUser", "user")
-                        .WithMany()
-                        .HasForeignKey("userId");
-
-                    b.Navigation("item");
-
-                    b.Navigation("partner");
-
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNoteItem", b =>
-                {
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNote", "deliveryNote")
-                        .WithMany("deliveryNoteItems")
-                        .HasForeignKey("DeliveryNoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Item", "item")
-                        .WithMany("deliveryNoteItems")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("deliveryNote");
-
-                    b.Navigation("item");
-                });
-
-            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Item", b =>
-                {
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Category", "category")
-                        .WithMany("items")
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Category", "Category")
+                        .WithMany("Articles")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("category");
+                    b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Order", b =>
+            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNote", b =>
                 {
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Item", "item")
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Article", "Article")
                         .WithMany()
-                        .HasForeignKey("ItemId")
+                        .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Partner", "partner")
-                        .WithMany("orders")
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Partner", "Partner")
+                        .WithMany("DeliveryNotes")
                         .HasForeignKey("PartnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.ApplicationUser", "user")
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("userId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("item");
+                    b.Navigation("Article");
+
+                    b.Navigation("Partner");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNoteItem", b =>
+                {
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Article", "Article")
+                        .WithMany("DeliveryNoteItems")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNote", "DeliveryNote")
+                        .WithMany("DeliveryNoteItems")
+                        .HasForeignKey("DeliveryNoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("DeliveryNote");
+                });
+
+            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Order", b =>
+                {
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Article", "Article")
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Partner", "partner")
+                        .WithMany("Orders")
+                        .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("User");
 
                     b.Navigation("partner");
-
-                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.OrderItem", b =>
                 {
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Item", "item")
-                        .WithMany("orderItems")
-                        .HasForeignKey("ItemId")
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Article", "Article")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Order", "order")
-                        .WithMany("orderItems")
+                    b.HasOne("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Order", "Order")
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("item");
+                    b.Navigation("Article");
 
-                    b.Navigation("order");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -696,33 +699,33 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Article", b =>
+                {
+                    b.Navigation("DeliveryNoteItems");
+
+                    b.Navigation("OrderItems");
+                });
+
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Category", b =>
                 {
-                    b.Navigation("items");
+                    b.Navigation("Articles");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.DeliveryNote", b =>
                 {
-                    b.Navigation("deliveryNoteItems");
-                });
-
-            modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Item", b =>
-                {
-                    b.Navigation("deliveryNoteItems");
-
-                    b.Navigation("orderItems");
+                    b.Navigation("DeliveryNoteItems");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Order", b =>
                 {
-                    b.Navigation("orderItems");
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("FOI2026.WarehouseFlow.Infrastructure.Data.Models.Partner", b =>
                 {
-                    b.Navigation("deliveryNotes");
+                    b.Navigation("DeliveryNotes");
 
-                    b.Navigation("orders");
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

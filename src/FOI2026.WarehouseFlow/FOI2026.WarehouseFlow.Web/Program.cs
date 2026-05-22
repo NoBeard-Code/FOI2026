@@ -71,21 +71,21 @@ using (var scope = app.Services.CreateScope())
     var user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var role = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-    if (!ctx.Role.Any())
+    if (!ctx.Roles.Any())
     {
         await role.CreateAsync(new ApplicationRole { Name = "Admin" });
         await role.CreateAsync(new ApplicationRole { Name = "Worker" });
     }
 
-    if (!ctx.User.Any())
+    if (!ctx.Users.Any())
     {
         var admin = new ApplicationUser
         {
             UserName = "admin",
             Email = "admin@admin.com",
-            firstName = "Admin",
-            lastName = "Admin",
-            isActive = true,
+            FirstName = "Admin",
+            LastName = "Admin",
+            IsActive = true,
             EmailConfirmed = true
         };
         await user.CreateAsync(admin, "Admin123!");
