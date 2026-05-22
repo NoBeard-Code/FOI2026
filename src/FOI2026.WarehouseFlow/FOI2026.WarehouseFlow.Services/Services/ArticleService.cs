@@ -49,5 +49,12 @@ namespace FOI2026.WarehouseFlow.Services.Services
         {
             return await _articleRepository.GetByIdAsync(id);
         }
+
+        public async Task AddArticleAsync(Article article)
+        {
+            await _articleRepository.AddAsync(article);
+        }
+
+    
     }
 }
