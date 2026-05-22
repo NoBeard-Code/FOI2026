@@ -60,5 +60,10 @@ namespace FOI2026.WarehouseFlow.Services.Services
             await _articleRepository.UpdateAsync(article);
         }
 
+        public async Task DeleteArticleAsync(int id)
+        {
+            await _articleRepository.DeleteAsync(id);
+        }
+
     }
 }
