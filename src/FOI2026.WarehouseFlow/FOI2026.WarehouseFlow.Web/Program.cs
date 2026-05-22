@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
+using FOI2026.WarehouseFlow.Services;
+using FOI2026.WarehouseFlow.Services.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

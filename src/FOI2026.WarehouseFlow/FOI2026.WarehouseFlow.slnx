@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="FOI2026.WarehouseFlow.Infrastructure/FOI2026.WarehouseFlow.Infrastructure.csproj" />
+  <Project Path="FOI2026.WarehouseFlow.Services/FOI2026.WarehouseFlow.Services.csproj" Id="2b026954-ff68-4712-9dca-2f15ee70f3d8" />
   <Project Path="FOI2026.WarehouseFlow.Web/FOI2026.WarehouseFlow.Web.csproj" />
 </Solution>
