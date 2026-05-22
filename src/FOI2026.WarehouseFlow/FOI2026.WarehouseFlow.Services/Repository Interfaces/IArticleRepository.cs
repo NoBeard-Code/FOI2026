@@ -9,6 +9,7 @@ namespace FOI2026.WarehouseFlow.Services.Repository_Interfaces
     {
 
         Task<IEnumerable<Article>> GetAllAsync();
+        Task<IEnumerable<Article>> GetAllWithStockDataAsync();
         Task<Article> GetByIdAsync(int id);
         Task AddAsync(Article article);
         Task UpdateAsync(Article article);
