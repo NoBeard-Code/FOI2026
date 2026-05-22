@@ -11,5 +11,7 @@ namespace FOI2026.WarehouseFlow.Services.Repository_Interfaces
         public Task<IEnumerable<Article>> GetAllAsync();
 
 
+
+
     }
 }
