@@ -77,5 +77,15 @@ namespace FOI2026.WarehouseFlow.Services.Services
             return articles.Where(a => a.Name.ToLower().Contains(normalizedTerm)
                                      || a.Code.ToLower().Contains(normalizedTerm));
         }
+
+        public async Task<IEnumerable<Article>> FilterByStatusAsync(string status)
+        {
+            var articles = await GetAllArticlesWithStockAsync();
+
+            if (string.IsNullOrWhiteSpace(status) || status == "Sve")
+                return articles;
+
+            return articles.Where(a => a.Status == status);
+        }
     }
 }
