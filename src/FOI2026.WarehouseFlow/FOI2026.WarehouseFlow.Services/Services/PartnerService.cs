@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
+using FOI2026.WarehouseFlow.Services.Repository_Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,6 +24,12 @@ namespace FOI2026.WarehouseFlow.Services.Services
         {
             partner.IsSupplier = true;
             await _partnerRepository.AddAsync(partner);
+        }
+
+        public async Task UpdateSupplierAsync(Partner partner)
+        {
+            partner.IsSupplier = true;
+            await _partnerRepository.UpdateAsync(partner);
         }
     }
 }
