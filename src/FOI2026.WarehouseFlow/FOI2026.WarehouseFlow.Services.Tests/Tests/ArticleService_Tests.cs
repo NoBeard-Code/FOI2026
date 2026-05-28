@@ -105,6 +105,154 @@ namespace FOI2026.WarehouseFlow.Services.Tests.Tests
             Assert.Equal("OK", result[0].Status);
             Assert.Equal("Kritično", result[1].Status);
         }
+        [Fact]
+        public async Task CalculateCurrentStock_ReturnsZero_WhenNoDeliveriesAndNoOrders()
+        {
+            // Arrange
+            var article = BuildArticle(articleId: 1, delivered: 0, ordered: 0, minStock: 5);
 
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert
+            Assert.Equal(0, result.CurrentStock);
+        }
+
+        [Fact]
+        public async Task CalculateCurrentStock_ReturnsDeliveredAmount_WhenNoOrders()
+        {
+            // Arrange
+            var article = BuildArticle(articleId: 1, delivered: 80, ordered: 0, minStock: 5);
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert
+            Assert.Equal(80, result.CurrentStock);
+        }
+
+        [Fact]
+        public async Task CalculateCurrentStock_ReturnsNegative_WhenOrdersExceedDeliveries()
+        {
+            // Arrange 
+            var article = BuildArticle(articleId: 1, delivered: 10, ordered: 30, minStock: 5);
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert
+            Assert.Equal(-20, result.CurrentStock);
+        }
+
+        [Fact]
+        public async Task CalculateCurrentStock_HandlesNullDeliveryNoteItems_AsZero()
+        {
+            // Arrange
+            var article = new Article
+            {
+                ArticleId = 1,
+                MinStock = 5,
+                DeliveryNoteItems = null,
+                OrderItems = new List<OrderItem>
+                {
+                    new OrderItem { Quantity = 10 }
+                }
+            };
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert
+            Assert.Equal(-10, result.CurrentStock);
+        }
+
+        [Fact]
+        public async Task CalculateCurrentStock_HandlesNullOrderItems_AsZero()
+        {
+            // Arrange
+            var article = new Article
+            {
+                ArticleId = 1,
+                MinStock = 5,
+                DeliveryNoteItems = new List<DeliveryNoteItem>
+                {
+                    new DeliveryNoteItem { Quantity = 50 }
+                },
+                OrderItems = null
+            };
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert – 50 (isporuke) - 0 (narudžbe) = 50
+            Assert.Equal(50, result.CurrentStock);
+        }
+
+        [Fact]
+        public async Task CalculateCurrentStock_SumsMultipleDeliveryAndOrderItems()
+        {
+            // Arrange
+            var article = new Article
+            {
+                ArticleId = 1,
+                MinStock = 5,
+                DeliveryNoteItems = new List<DeliveryNoteItem>
+                {
+                    new DeliveryNoteItem { Quantity = 40 },
+                    new DeliveryNoteItem { Quantity = 60 }   // ukupno isporučeno = 100
+                },
+                OrderItems = new List<OrderItem>
+                {
+                    new OrderItem { Quantity = 15 },
+                    new OrderItem { Quantity = 25 }           
+                }
+            };
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+         
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            
+            Assert.Equal(60, result.CurrentStock);
+        }
+
+        private static Article BuildArticle(int articleId, int delivered, int ordered, int minStock)
+        {
+            return new Article
+            {
+                ArticleId = articleId,
+                MinStock = minStock,
+                DeliveryNoteItems = delivered == 0
+                    ? new List<DeliveryNoteItem>()
+                    : new List<DeliveryNoteItem>
+                    {
+                new DeliveryNoteItem { Quantity = delivered }
+                    },
+                OrderItems = ordered == 0
+                    ? new List<OrderItem>()
+                    : new List<OrderItem>
+                    {
+                new OrderItem { Quantity = ordered }
+                    }
+            };
+        }
     }
+
 }
