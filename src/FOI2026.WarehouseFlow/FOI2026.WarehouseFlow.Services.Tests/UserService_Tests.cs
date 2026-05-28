@@ -11,64 +11,66 @@ namespace FOI2026.WarehouseFlow.Services.Tests
 {
     public class UserService_Tests
     {
+        private (UserService service, IUserRepository fakeRepo) CreateService()
+        {
+            var fakeRepo = A.Fake<IUserRepository>();
+            var service = new UserService(fakeRepo);
+            return (service, fakeRepo);
+        }
+
         [Fact]
         public async Task GetAllAsync_WhenCalled_ReturnsUsersFromRepository()
         {
             //Arrange
-            var korisnici = new List<ApplicationUser>
-    {
-        new ApplicationUser { Id = "1" },
-        new ApplicationUser { Id = "2" }
-    };
+            var users = new List<ApplicationUser>
+            {
+                new ApplicationUser { Id = "1" },
+                new ApplicationUser { Id = "2" }
+            };
 
-            var fakeRepo = A.Fake<IUserRepository>();
-            A.CallTo(() => fakeRepo.GetAllAsync()).Returns(korisnici);
-
-            var service = new UserService(fakeRepo);
+            var (service, fakeRepo) = CreateService();
+            A.CallTo(() => fakeRepo.GetAllAsync()).Returns(users);
 
             //Act
-            var rezultat = await service.GetAllAsync();
+            var result = await service.GetAllAsync();
 
             //Assert
-            Assert.Equal(2, rezultat.ToList().Count);
+            Assert.Equal(2, result.ToList().Count);
         }
 
         [Fact]
         public async Task AddAsync_WhenCalled_CallsRepositoryAdd()
         {
             //Arrange
-            var korisnik = new ApplicationUser { Id = "1" };
-            var fakeRepo = A.Fake<IUserRepository>();
-            var service = new UserService(fakeRepo);
+            var user = new ApplicationUser { Id = "1" };
+            var (service, fakeRepo) = CreateService();
 
             //Act
-            await service.AddAsync(korisnik);
+            await service.AddAsync(user);
 
             //Assert
-            A.CallTo(() => fakeRepo.AddAsync(korisnik)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeRepo.AddAsync(user)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task UpdateAsync_WhenCalled_CallsRepositoryUpdate()
         {
             //Arrange
-            var korisnik = new ApplicationUser { Id = "1" };
-            var fakeRepo = A.Fake<IUserRepository>();
-            var service = new UserService(fakeRepo);
+            var user = new ApplicationUser { Id = "1" };
+            var (service, fakeRepo) = CreateService();
 
             //Act
-            await service.UpdateAsync(korisnik);
+            await service.UpdateAsync(user);
 
             //Assert
-            A.CallTo(() => fakeRepo.UpdateAsync(korisnik)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeRepo.UpdateAsync(user)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task DeleteAsync_WhenCalled_CallsRepositoryDelete()
         {
             //Arrange
-            var fakeRepo = A.Fake<IUserRepository>();
-            var service = new UserService(fakeRepo);
+            var (service, fakeRepo) = CreateService();
 
             //Act
             await service.DeleteAsync("1");
@@ -77,38 +79,32 @@ namespace FOI2026.WarehouseFlow.Services.Tests
             A.CallTo(() => fakeRepo.DeleteAsync("1")).MustHaveHappenedOnceExactly();
         }
 
-
         [Fact]
         public async Task DeactivateAsync_GivenExistingUser_UserIsDeactivated()
         {
             //Arrange
-            var korisnik = new ApplicationUser { Id = "1", IsActive = true };
-
-            var fakeRepo = A.Fake<IUserRepository>();
-            A.CallTo(() => fakeRepo.GetByIdAsync("1")).Returns(korisnik);
-
-            var service = new UserService(fakeRepo);
+            var user = new ApplicationUser { Id = "1", IsActive = true };
+            var (service, fakeRepo) = CreateService();
+            A.CallTo(() => fakeRepo.GetByIdAsync("1")).Returns(user);
 
             //Act
             await service.DeactivateAsync("1");
 
             //Assert
-            Assert.False(korisnik.IsActive);
-            A.CallTo(() => fakeRepo.UpdateAsync(korisnik)).MustHaveHappenedOnceExactly();
+            Assert.False(user.IsActive);
+            A.CallTo(() => fakeRepo.UpdateAsync(user)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task DeactivateAsync_GivenNonExistingUser_UpdateIsNotCalled()
         {
             //Arrange
-            var fakeRepo = A.Fake<IUserRepository>();
-            A.CallTo(() => fakeRepo.GetByIdAsync("nepostojeci"))
+            var (service, fakeRepo) = CreateService();
+            A.CallTo(() => fakeRepo.GetByIdAsync("nonexistent"))
                 .Returns(Task.FromResult<ApplicationUser>(null));
 
-            var service = new UserService(fakeRepo);
-
             //Act
-            await service.DeactivateAsync("nepostojeci");
+            await service.DeactivateAsync("nonexistent");
 
             //Assert
             A.CallTo(() => fakeRepo.UpdateAsync(A<ApplicationUser>._)).MustNotHaveHappened();
@@ -118,84 +114,73 @@ namespace FOI2026.WarehouseFlow.Services.Tests
         public async Task ActivateAsync_GivenExistingUser_UserIsActivated()
         {
             //Arrange
-            var korisnik = new ApplicationUser { Id = "2", IsActive = false };
-
-            var fakeRepo = A.Fake<IUserRepository>();
-            A.CallTo(() => fakeRepo.GetByIdAsync("2")).Returns(korisnik);
-
-            var service = new UserService(fakeRepo);
+            var user = new ApplicationUser { Id = "2", IsActive = false };
+            var (service, fakeRepo) = CreateService();
+            A.CallTo(() => fakeRepo.GetByIdAsync("2")).Returns(user);
 
             //Act
             await service.ActivateAsync("2");
 
             //Assert
-            Assert.True(korisnik.IsActive);
-            A.CallTo(() => fakeRepo.UpdateAsync(korisnik)).MustHaveHappenedOnceExactly();
+            Assert.True(user.IsActive);
+            A.CallTo(() => fakeRepo.UpdateAsync(user)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task ActivateAsync_GivenNonExistingUser_UpdateIsNotCalled()
         {
             //Arrange
-            var fakeRepo = A.Fake<IUserRepository>();
-            A.CallTo(() => fakeRepo.GetByIdAsync("nepostojeci"))
+            var (service, fakeRepo) = CreateService();
+            A.CallTo(() => fakeRepo.GetByIdAsync("nonexistent"))
                 .Returns(Task.FromResult<ApplicationUser>(null));
 
-            var service = new UserService(fakeRepo);
-
             //Act
-            await service.ActivateAsync("nepostojeci");
+            await service.ActivateAsync("nonexistent");
 
             //Assert
             A.CallTo(() => fakeRepo.UpdateAsync(A<ApplicationUser>._)).MustNotHaveHappened();
         }
 
         [Fact]
-        public async Task GetByStatusAsync_GivenActiveStatus_ReturnsUsersFromRepository()
+        public async Task GetByStatusAsync_GivenActiveStatus_ReturnsActiveUsersFromRepository()
         {
             //Arrange
-            var aktivni = new List<ApplicationUser>
+            var activeUsers = new List<ApplicationUser>
             {
                 new ApplicationUser { Id = "1", IsActive = true },
                 new ApplicationUser { Id = "2", IsActive = true }
             };
 
-            var fakeRepo = A.Fake<IUserRepository>();
-            A.CallTo(() => fakeRepo.GetByStatusAsync(true)).Returns(aktivni);
-
-            var service = new UserService(fakeRepo);
+            var (service, fakeRepo) = CreateService();
+            A.CallTo(() => fakeRepo.GetByStatusAsync(true)).Returns(activeUsers);
 
             //Act
-            var rezultat = await service.GetByStatusAsync(true);
+            var result = await service.GetByStatusAsync(true);
 
             //Assert
-            Assert.Equal(2, rezultat.ToList().Count);
-            Assert.All(rezultat, u => Assert.True(u.IsActive));
+            Assert.Equal(2, result.ToList().Count);
+            Assert.All(result, u => Assert.True(u.IsActive));
         }
 
         [Fact]
         public async Task GetByStatusAsync_GivenInactiveStatus_ReturnsInactiveUsersFromRepository()
         {
             //Arrange
-            var neaktivni = new List<ApplicationUser>
-        {
-            new ApplicationUser { Id = "3", IsActive = false },
-            new ApplicationUser { Id = "4", IsActive = false }
-        };
+            var inactiveUsers = new List<ApplicationUser>
+            {
+                new ApplicationUser { Id = "3", IsActive = false },
+                new ApplicationUser { Id = "4", IsActive = false }
+            };
 
-        var fakeRepo = A.Fake<IUserRepository>();
-         A.CallTo(() => fakeRepo.GetByStatusAsync(false)).Returns(neaktivni);
+            var (service, fakeRepo) = CreateService();
+            A.CallTo(() => fakeRepo.GetByStatusAsync(false)).Returns(inactiveUsers);
 
-        var service = new UserService(fakeRepo);
+            //Act
+            var result = await service.GetByStatusAsync(false);
 
-         //Act
-        var rezultat = await service.GetByStatusAsync(false);
-
-         //Assert
-         Assert.Equal(2, rezultat.ToList().Count);
-         Assert.All(rezultat, u => Assert.False(u.IsActive));
+            //Assert
+            Assert.Equal(2, result.ToList().Count);
+            Assert.All(result, u => Assert.False(u.IsActive));
         }
-
-
     }
 }
