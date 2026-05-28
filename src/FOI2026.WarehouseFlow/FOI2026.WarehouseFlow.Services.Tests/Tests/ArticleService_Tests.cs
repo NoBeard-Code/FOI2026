@@ -199,7 +199,7 @@ namespace FOI2026.WarehouseFlow.Services.Tests.Tests
             // Act
             var result = (await _service.GetAllArticlesWithStockAsync()).Single();
 
-            // Assert – 50 (isporuke) - 0 (narudžbe) = 50
+            // Assert 
             Assert.Equal(50, result.CurrentStock);
         }
 
@@ -231,6 +231,71 @@ namespace FOI2026.WarehouseFlow.Services.Tests.Tests
 
             
             Assert.Equal(60, result.CurrentStock);
+        }
+
+
+        [Fact]
+        public async Task DetermineStockStatus_ReturnsOK_WhenCurrentStockEqualsMinStock()
+        {
+            // Arrange 
+            var article = BuildArticle(articleId: 1, delivered: 10, ordered: 0, minStock: 10);
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert
+            Assert.Equal("OK", result.Status);
+        }
+
+        [Fact]
+        public async Task DetermineStockStatus_ReturnsOK_WhenCurrentStockAboveMinStock()
+        {
+            // Arrange
+            var article = BuildArticle(articleId: 1, delivered: 50, ordered: 10, minStock: 10);
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert 
+            Assert.Equal("OK", result.Status);
+        }
+
+        [Fact]
+        public async Task DetermineStockStatus_ReturnsKriticno_WhenCurrentStockBelowMinStock()
+        {
+            // Arrange
+            var article = BuildArticle(articleId: 1, delivered: 5, ordered: 0, minStock: 10);
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert 
+            Assert.Equal("Kritično", result.Status);
+        }
+
+        [Fact]
+        public async Task DetermineStockStatus_ReturnsKriticno_WhenCurrentStockIsNegative()
+        {
+            // Arrange
+            var article = BuildArticle(articleId: 1, delivered: 0, ordered: 5, minStock: 1);
+
+            A.CallTo(() => _articleRepository.GetAllWithStockDataAsync())
+                .Returns(Task.FromResult<IEnumerable<Article>>(new[] { article }));
+
+            // Act
+            var result = (await _service.GetAllArticlesWithStockAsync()).Single();
+
+            // Assert 
+            Assert.Equal("Kritično", result.Status);
         }
 
         private static Article BuildArticle(int articleId, int delivered, int ordered, int minStock)
