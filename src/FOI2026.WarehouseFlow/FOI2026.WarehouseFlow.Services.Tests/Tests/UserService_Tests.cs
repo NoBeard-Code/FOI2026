@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace FOI2026.WarehouseFlow.Services.Tests
+namespace FOI2026.WarehouseFlow.Services.Tests.Tests
 {
     public class UserService_Tests
     {
