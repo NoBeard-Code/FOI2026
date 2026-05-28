@@ -31,5 +31,10 @@ namespace FOI2026.WarehouseFlow.Services.Services
             partner.IsSupplier = true;
             await _partnerRepository.UpdateAsync(partner);
         }
+
+        public async Task DeleteSupplierAsync(int id)
+        {
+            await _partnerRepository.DeleteAsync(id);
+        }
     }
 }
