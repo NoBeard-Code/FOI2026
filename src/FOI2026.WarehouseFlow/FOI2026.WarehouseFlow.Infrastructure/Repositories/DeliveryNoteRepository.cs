@@ -19,12 +19,16 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Repositories
 
         public async Task<IEnumerable<DeliveryNote>> GetAllAsync()
         {
-            return await _context.DeliveryNotes.ToListAsync();
+            return await _context.DeliveryNotes
+                .Include(d => d.DeliveryNoteItems)
+                .ToListAsync();
         }
 
         public async Task<DeliveryNote?> GetByIdAsync(int id)
         {
-            return await _context.DeliveryNotes.FindAsync(id);
+            return await _context.DeliveryNotes
+                .Include(d => d.DeliveryNoteItems)
+                .FirstOrDefaultAsync(d => d.DeliveryNoteId == id);
         }
 
         public async Task AddAsync(DeliveryNote deliveryNote)
