@@ -297,6 +297,53 @@ namespace FOI2026.WarehouseFlow.Services.Tests.Tests
             // Assert 
             Assert.Equal("Kritično", result.Status);
         }
+        [Fact]
+        public async Task GetArticleByIdAsync_ReturnsArticle_WhenArticleExists()
+        {
+            // Arrange
+            var expected = new Article { ArticleId = 42, Name = "Vijak M8" };
+
+            A.CallTo(() => _articleRepository.GetByIdAsync(42))
+                .Returns(Task.FromResult<Article?>(expected));
+
+            // Act
+            var result = await _service.GetArticleByIdAsync(42);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(42, result!.ArticleId);
+            Assert.Equal("Vijak M8", result.Name);
+        }
+
+        [Fact]
+        public async Task GetArticleByIdAsync_ReturnsNull_WhenArticleDoesNotExist()
+        {
+            // Arrange
+            A.CallTo(() => _articleRepository.GetByIdAsync(A<int>._))
+                .Returns(Task.FromResult<Article?>(null));
+
+            // Act
+            var result = await _service.GetArticleByIdAsync(999);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetArticleByIdAsync_CallsRepository_WithCorrectId()
+        {
+            // Arrange
+            A.CallTo(() => _articleRepository.GetByIdAsync(A<int>._))
+                .Returns(Task.FromResult<Article?>(null));
+
+            // Act
+            await _service.GetArticleByIdAsync(7);
+
+            // Assert
+            A.CallTo(() => _articleRepository.GetByIdAsync(7))
+                .MustHaveHappenedOnceExactly();
+        }
+
 
         private static Article BuildArticle(int articleId, int delivered, int ordered, int minStock)
         {
