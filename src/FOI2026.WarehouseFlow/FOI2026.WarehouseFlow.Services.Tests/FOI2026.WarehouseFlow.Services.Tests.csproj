@@ -8,8 +8,14 @@
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="FakeItEasy" Version="9.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.8" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FOI2026.WarehouseFlow.Infrastructure\FOI2026.WarehouseFlow.Infrastructure.csproj" />
+    <ProjectReference Include="..\FOI2026.WarehouseFlow.Services\FOI2026.WarehouseFlow.Services.csproj" />
   </ItemGroup>
 
 

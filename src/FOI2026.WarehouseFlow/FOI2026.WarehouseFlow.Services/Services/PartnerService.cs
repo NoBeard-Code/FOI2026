@@ -19,5 +19,35 @@ namespace FOI2026.WarehouseFlow.Services.Services
         {
             return await _partnerRepository.GetAllAsync();
         }
+
+        public async Task AddSupplierAsync(Partner partner)
+        {
+            partner.IsSupplier = true;
+            await _partnerRepository.AddAsync(partner);
+        }
+
+        public async Task UpdateSupplierAsync(Partner partner)
+        {
+            partner.IsSupplier = true;
+            await _partnerRepository.UpdateAsync(partner);
+        }
+
+        public async Task DeleteSupplierAsync(int id)
+        {
+            await _partnerRepository.DeleteAsync(id);
+        }
+
+        public async Task<IEnumerable<Partner>> SearchSuppliersAsync(string searchTerm)
+        {
+            var suppliers = await _partnerRepository.GetAllAsync();
+
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return suppliers;
+
+            var normalizedTerm = searchTerm.Trim().ToLower();
+
+            return suppliers.Where(p =>
+                p.Name.ToLower().Contains(normalizedTerm));
+        }
     }
 }

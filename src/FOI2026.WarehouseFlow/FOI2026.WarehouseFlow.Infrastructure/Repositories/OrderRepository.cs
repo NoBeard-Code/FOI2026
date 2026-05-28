@@ -20,12 +20,17 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Repositories
 
         public async Task<IEnumerable<Order>> GetAllAsync()
         {
-            return await _context.Orders.ToListAsync();
+
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .ToListAsync();
         }
 
         public async Task<Order?> GetByIdAsync(int id)
         {
-            return await _context.Orders.FindAsync(id);
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
         }
 
         public async Task AddAsync(Order order)
