@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
 using FOI2026.WarehouseFlow.Services;
 using FOI2026.WarehouseFlow.Services.Models;
+using FOI2026.WarehouseFlow.Services.Repository_Interfaces;
+using FOI2026.WarehouseFlow.Services.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
