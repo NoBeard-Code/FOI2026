@@ -13,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tests\" />
+    <ProjectReference Include="..\FOI2026.WarehouseFlow.Infrastructure\FOI2026.WarehouseFlow.Infrastructure.csproj" />
+    <ProjectReference Include="..\FOI2026.WarehouseFlow.Services\FOI2026.WarehouseFlow.Services.csproj" />
   </ItemGroup>
 
 
