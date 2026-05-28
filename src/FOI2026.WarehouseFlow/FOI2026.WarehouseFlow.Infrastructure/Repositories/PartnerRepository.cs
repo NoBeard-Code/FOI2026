@@ -20,7 +20,9 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Repositories
 
         public async Task<IEnumerable<Partner>> GetAllAsync()
         {
-            return await _context.Partners.ToListAsync();
+            return await _context.Partners
+                .Where(p => p.IsSupplier)
+                .ToListAsync();
         }
 
         public async Task<Partner?> GetByIdAsync(int id)
