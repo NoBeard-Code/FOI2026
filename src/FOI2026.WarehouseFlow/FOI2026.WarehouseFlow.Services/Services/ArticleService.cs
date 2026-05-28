@@ -99,5 +99,19 @@ namespace FOI2026.WarehouseFlow.Services.Services
 
             return articles;
         }
+
+        //FZ09
+
+        public async Task<IEnumerable<Article>> GetCriticalArticlesAsync()
+        {
+            var articles = await GetAllArticlesWithStockAsync();
+            return articles.Where(a => a.CurrentStock < a.MinStock);
+        }
+
+        public async Task<int> GetCriticalArticlesCountAsync()
+        {
+            var critical = await GetCriticalArticlesAsync();
+            return critical.Count();
+        }
     }
 }
