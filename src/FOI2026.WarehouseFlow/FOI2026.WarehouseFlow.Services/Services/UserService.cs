@@ -22,8 +22,7 @@ namespace FOI2026.WarehouseFlow.Services.Services
 
         public async Task<IEnumerable<ApplicationUser>> GetByStatusAsync(bool isActive)
         {
-            var users = await _userRepository.GetAllAsync();
-            return users.Where(u => u.IsActive == isActive);
+            return await _userRepository.GetByStatusAsync(isActive);
         }
 
 

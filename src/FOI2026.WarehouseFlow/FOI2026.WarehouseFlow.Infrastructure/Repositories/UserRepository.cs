@@ -25,6 +25,14 @@ namespace FOI2026.WarehouseFlow.Infrastructure.Repositories
             return await _context.Users.FindAsync(id);
         }
 
+        public async Task<IEnumerable<ApplicationUser>> GetByStatusAsync(bool isActive)
+        {
+            return await _context.Users
+                .Where(u => u.IsActive == isActive)
+                .ToListAsync();
+        }
+
+
         public async Task AddAsync(ApplicationUser applicationUser)
         {
             await _context.Users.AddAsync(applicationUser);

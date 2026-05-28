@@ -9,6 +9,7 @@ namespace FOI2026.WarehouseFlow.Services.Repository_Interfaces
     public interface IUserRepository
     {
         Task<IEnumerable<ApplicationUser>> GetAllAsync();
+        Task<IEnumerable<ApplicationUser>> GetByStatusAsync(bool isActive);
         Task<ApplicationUser> GetByIdAsync(string id);
         Task AddAsync(ApplicationUser applicationUser);
         Task UpdateAsync(ApplicationUser applicationUser);
