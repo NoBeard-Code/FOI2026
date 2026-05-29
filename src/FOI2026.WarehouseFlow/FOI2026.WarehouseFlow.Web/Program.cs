@@ -49,10 +49,13 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 
 // Repositories
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 // Services
 builder.Services.AddScoped<ArticleService>();
-
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RoleService>();
 
 
 
