@@ -1,6 +1,7 @@
 ﻿using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
 using FOI2026.WarehouseFlow.Services.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
 
 namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
 {
@@ -10,10 +11,13 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
         public UserService UserService { get; set; }
 
         [Inject]
+        public UserManager<ApplicationUser> UserManager { get; set; }
+
+        [Inject]
         public NavigationManager Navigation { get; set; }
 
-        private IEnumerable<ApplicationUser> sviZaposlenici = new List<ApplicationUser>();
-        private IEnumerable<ApplicationUser> zaposlenici = new List<ApplicationUser>();
+        private List<EmployeeViewModel> sviZaposlenici = new();
+        private List<EmployeeViewModel> zaposlenici = new();
         private string aktivniTab = "svi";
 
         protected override async Task OnInitializedAsync()
@@ -23,7 +27,19 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
 
         private async Task UcitajZaposlenike()
         {
-            sviZaposlenici = await UserService.GetAllAsync();
+            var users = await UserService.GetAllAsync();
+            sviZaposlenici = new List<EmployeeViewModel>();
+
+            foreach (var user in users)
+            {
+                var roles = await UserManager.GetRolesAsync(user);
+                sviZaposlenici.Add(new EmployeeViewModel
+                {
+                    User = user,
+                    Role = roles.FirstOrDefault() ?? "Nema uloge"
+                });
+            }
+
             PrimijeniFilter();
         }
 
@@ -33,14 +49,32 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
             PrimijeniFilter();
         }
 
+        private int trenutnaStranica = 1;
+        private int zaposlenikaPoStranici = 10;
+
+        private List<EmployeeViewModel> ZaposleniziNaTrenutnoStranici =>
+            zaposlenici
+                .Skip((trenutnaStranica - 1) * zaposlenikaPoStranici)
+                .Take(zaposlenikaPoStranici)
+                .ToList();
+
+        private int UkupnoStranica =>
+            (int)Math.Ceiling((double)zaposlenici.Count / zaposlenikaPoStranici);
+
+        private void IdiNaStranicuu(int stranica)
+        {
+            trenutnaStranica = stranica;
+        }
+
         private void PrimijeniFilter()
         {
             zaposlenici = aktivniTab switch
             {
-                "aktivni" => sviZaposlenici.Where(u => u.IsActive),
-                "deaktivirani" => sviZaposlenici.Where(u => !u.IsActive),
+                "aktivni" => sviZaposlenici.Where(u => u.User.IsActive).ToList(),
+                "deaktivirani" => sviZaposlenici.Where(u => !u.User.IsActive).ToList(),
                 _ => sviZaposlenici
             };
+            trenutnaStranica = 1;
         }
 
         private async Task Deaktiviraj(string id)
@@ -59,5 +93,7 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
         {
             Navigation.NavigateTo("/employees/add");
         }
+
+
     }
 }
