@@ -67,20 +67,44 @@
                             }
                         </td>
                         <td>
-                            @if (zaposlenik.User.IsActive)
-                            {
-                                <button class="btn btn-sm btn-warning"
-                                        @onclick="() => Deaktiviraj(zaposlenik.User.Id)">
-                                    Deaktiviraj
-                                </button>
-                            }
-                            else
-                            {
-                                <button class="btn btn-sm btn-success"
-                                        @onclick="() => Aktiviraj(zaposlenik.User.Id)">
-                                    Aktiviraj
-                                </button>
-                            }
+                            <div class="d-flex gap-2">
+                                @if (zaposlenik.User.IsActive)
+                                {
+                                    <button class="btn btn-sm btn-warning"
+                                            @onclick="() => Deaktiviraj(zaposlenik.User.Id)">
+                                        Deaktiviraj
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-success"
+                                            @onclick="() => Aktiviraj(zaposlenik.User.Id)">
+                                        Aktiviraj
+                                    </button>
+                                }
+
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-secondary"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        ...
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <button class="dropdown-item"
+                                                    @onclick="() => Uredi(zaposlenik.User.Id)">
+                                                <i class="bi bi-pencil"></i> Uredi
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item text-danger"
+                                                    @onclick="() => Obrisi(zaposlenik.User.Id)">
+                                                <i class="bi bi-trash"></i> Obriši
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 }

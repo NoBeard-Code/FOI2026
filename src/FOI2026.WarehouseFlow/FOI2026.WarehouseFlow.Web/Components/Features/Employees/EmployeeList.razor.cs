@@ -2,6 +2,7 @@
 using FOI2026.WarehouseFlow.Services.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.JSInterop;
 
 namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
 {
@@ -15,6 +16,9 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
 
         [Inject]
         public NavigationManager Navigation { get; set; }
+
+        [Inject]
+        public IJSRuntime JS { get; set; }
 
         private List<EmployeeViewModel> sviZaposlenici = new();
         private List<EmployeeViewModel> zaposlenici = new();
@@ -92,6 +96,20 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
         private void DodajZaposlenika()
         {
             Navigation.NavigateTo("/employees/add");
+        }
+
+        private void Uredi(string id)
+        {
+            Navigation.NavigateTo($"/employees/edit/{id}");
+        }
+
+        private async Task Obrisi(string id)
+        {
+            var potvrda = await JS.InvokeAsync<bool>("confirm", "Jeste li sigurni da želite obrisati zaposlenika?");
+            if (!potvrda) return;
+
+            await UserService.DeleteAsync(id);
+            await UcitajZaposlenike();
         }
 
 

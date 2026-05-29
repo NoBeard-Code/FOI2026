@@ -1,0 +1,75 @@
+﻿@page "/employees/edit/{Id}"
+@rendermode InteractiveServer
+@using FOI2026.WarehouseFlow.Infrastructure.Data.Models
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container">
+    <div class="d-flex align-items-center mb-3">
+        <a href="/employees" class="btn btn-link ps-0">
+            <i class="bi bi-arrow-left"></i> Povratak
+        </a>
+    </div>
+
+    <h3>Uređivanje zaposlenika</h3>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title mb-4">User Details</h5>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Ime</label>
+                    <input class="form-control" @bind="firstName" placeholder="Unesite ime" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Prezime</label>
+                    <input class="form-control" @bind="lastName" placeholder="Unesite prezime" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Korisničko ime</label>
+                <input class="form-control" @bind="username" placeholder="Unesite korisničko ime" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input class="form-control" type="email" @bind="email" placeholder="ime@tvrtka.com" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Uloga</label>
+                <select class="form-select" @bind="selectedRole">
+                    <option value="">-- Odaberi ulogu --</option>
+                    @foreach (var role in roles)
+                    {
+                        <option value="@role.Name">
+                            @(role.Name == "Worker" ? "Radnik" : role.Name)
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" @onclick="Spremi">Spremi</button>
+            </div>
+
+            @if (uspjeh)
+            {
+                <div class="alert alert-success mt-3 d-flex justify-content-between">
+                    <span><i class="bi bi-check-lg"></i> Zaposlenik je uspješno spremljen.</span>
+                    <button class="btn-close" @onclick="() => uspjeh = false"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(greska))
+            {
+                <div class="alert alert-danger mt-3 d-flex justify-content-between">
+                    <span><i class="bi bi-x-lg"></i> @greska</span>
+                    <button class="btn-close" @onclick="() => greska = string.Empty"></button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
