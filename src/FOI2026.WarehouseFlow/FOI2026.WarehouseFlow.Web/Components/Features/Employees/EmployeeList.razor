@@ -4,8 +4,8 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Admin")]
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="container-fluid py-3">
+    <div class="page-header">
         <h3>Popis zaposlenika</h3>
         <button class="btn btn-primary" @onclick="DodajZaposlenika">
             <i class="bi bi-plus-lg"></i> Dodaj zaposlenika
@@ -33,83 +33,88 @@
     }
     else if (!zaposlenici.Any())
     {
-        <p>Nema zaposlenika.</p>
+        <div class="table-card p-4 text-center text-muted">
+            <i class="bi bi-people fs-1"></i>
+            <p class="mt-2">Nema zaposlenika.</p>
+        </div>
     }
     else
     {
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Ime i prezime</th>
-                    <th>Korisničko ime</th>
-                    <th>Email</th>
-                    <th>Uloga</th>
-                    <th>Status</th>
-                    <th>Akcije</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var zaposlenik in ZaposleniziNaTrenutnoStranici)
-                {
+        <div class="table-card">
+            <table class="wf-table">
+                <thead>
                     <tr>
-                        <td>@zaposlenik.User.FirstName @zaposlenik.User.LastName</td>
-                        <td>@zaposlenik.User.UserName</td>
-                        <td>@zaposlenik.User.Email</td>
-                        <td>@(zaposlenik.Role == "Worker" ? "Radnik" : zaposlenik.Role)</td>
-                        <td>
-                            @if (zaposlenik.User.IsActive)
-                            {
-                                <span class="badge bg-success">AKTIVAN</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">DEAKTIVIRAN</span>
-                            }
-                        </td>
-                        <td>
-                            <div class="d-flex gap-2">
+                        <th>Ime i prezime</th>
+                        <th>Korisničko ime</th>
+                        <th>Email</th>
+                        <th>Uloga</th>
+                        <th>Status</th>
+                        <th>Akcije</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var zaposlenik in ZaposleniziNaTrenutnoStranici)
+                    {
+                        <tr>
+                            <td>@zaposlenik.User.FirstName @zaposlenik.User.LastName</td>
+                            <td>@zaposlenik.User.UserName</td>
+                            <td>@zaposlenik.User.Email</td>
+                            <td>@(zaposlenik.Role == "Worker" ? "Radnik" : zaposlenik.Role)</td>
+                            <td>
                                 @if (zaposlenik.User.IsActive)
                                 {
-                                    <button class="btn btn-sm btn-warning"
-                                            @onclick="() => Deaktiviraj(zaposlenik.User.Id)">
-                                        Deaktiviraj
-                                    </button>
+                                    <span class="badge bg-success">AKTIVAN</span>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-sm btn-success"
-                                            @onclick="() => Aktiviraj(zaposlenik.User.Id)">
-                                        Aktiviraj
-                                    </button>
+                                    <span class="badge bg-danger">DEAKTIVIRAN</span>
                                 }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    @if (zaposlenik.User.IsActive)
+                                    {
+                                        <button class="btn btn-sm btn-warning"
+                                                @onclick="() => Deaktiviraj(zaposlenik.User.Id)">
+                                            Deaktiviraj
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm btn-success"
+                                                @onclick="() => Aktiviraj(zaposlenik.User.Id)">
+                                            Aktiviraj
+                                        </button>
+                                    }
 
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                        ...
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <button class="dropdown-item"
-                                                    @onclick="() => Uredi(zaposlenik.User.Id)">
-                                                <i class="bi bi-pencil"></i> Uredi
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button class="dropdown-item text-danger"
-                                                    @onclick="() => Obrisi(zaposlenik.User.Id)">
-                                                <i class="bi bi-trash"></i> Obriši
-                                            </button>
-                                        </li>
-                                    </ul>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-secondary"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            ...
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <button class="dropdown-item"
+                                                        @onclick="() => Uredi(zaposlenik.User.Id)">
+                                                    <i class="bi bi-pencil"></i> Uredi
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item text-danger"
+                                                        @onclick="() => Obrisi(zaposlenik.User.Id)">
+                                                    <i class="bi bi-trash"></i> Obriši
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
         @if (UkupnoStranica > 1)
         {
