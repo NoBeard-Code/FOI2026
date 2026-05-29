@@ -68,7 +68,7 @@ else
                 <th>Minimalno stanje</th>
                 <th>Maksimalno stanje</th>
                 <th>Status</th>
-                <th>Akcije</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -92,10 +92,17 @@ else
                             <span class="badge bg-success">OK</span>
                         }
                     </td>
-                    <td>
-                        <button class="btn btn-sm btn-primary"
-                                @onclick="() => NavigateToDetails(article.ArticleId)">
-                            Detalji
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary me-1"
+                                title="Uredi"
+                                @onclick="() => EditArticle(article.ArticleId)">
+                            ✏️
+                        </button>
+
+                        <button class="btn btn-sm btn-outline-danger"
+                                title="Obriši"
+                                @onclick="() => DeleteArticle(article.ArticleId)">
+                            🗑️
                         </button>
                     </td>
                 </tr>
@@ -134,8 +141,14 @@ else
         articles = result;
     }
 
-    private void NavigateToDetails(int articleId)
+    private void EditArticle(int articleId)
     {
-        NavigationManager.NavigateTo($"/article/{articleId}");
+        NavigationManager.NavigateTo($"/articles/edit/{articleId}");
+    }
+
+    private async Task DeleteArticle(int articleId)
+    {
+        await ArticleService.DeleteArticleAsync(articleId);
+        articles = await ArticleService.GetAllArticlesWithStockAsync();
     }
 }
