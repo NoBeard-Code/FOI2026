@@ -17,21 +17,25 @@
 
 .top-row {
     min-height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    background-color: #02437B !important;
+    justify-content: center !important;
 }
 
 .navbar-brand {
     font-size: 1.1rem;
+    color: white !important;
+    text-align: center;
+    margin: 0 auto;
 }
 
 .bi {
-    display: inline-block;
-    position: relative;
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-right: 0.75rem;
-    top: -1px;
-    background-size: cover;
+    display: inline !important;
+    width: auto !important;
+    height: auto !important;
+    background-image: none !important;
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 8px;
 }
 
 .bi-house-door-fill-nav-menu {
