@@ -1,0 +1,86 @@
+﻿@page "/employees"
+@rendermode InteractiveServer
+@using FOI2026.WarehouseFlow.Infrastructure.Data.Models
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Popis zaposlenika</h3>
+        <button class="btn btn-primary" @onclick="DodajZaposlenika">
+            <i class="bi bi-plus-lg"></i> Dodaj zaposlenika
+        </button>
+    </div>
+
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link @(aktivniTab == "svi" ? "active" : "")"
+               @onclick='() => PromijeniTab("svi")' style="cursor:pointer">Svi</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(aktivniTab == "aktivni" ? "active" : "")"
+               @onclick='() => PromijeniTab("aktivni")' style="cursor:pointer">Aktivni</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(aktivniTab == "deaktivirani" ? "active" : "")"
+               @onclick='() => PromijeniTab("deaktivirani")' style="cursor:pointer">Deaktivirani</a>
+        </li>
+    </ul>
+
+    @if (zaposlenici == null)
+    {
+        <p>Učitavanje...</p>
+    }
+    else if (!zaposlenici.Any())
+    {
+        <p>Nema zaposlenika.</p>
+    }
+    else
+    {
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Ime i prezime</th>
+                    <th>Korisničko ime</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Akcije</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var zaposlenik in zaposlenici)
+                {
+                    <tr>
+                        <td>@zaposlenik.FirstName @zaposlenik.LastName</td>
+                        <td>@zaposlenik.UserName</td>
+                        <td>@zaposlenik.Email</td>
+                        <td>
+                            @if (zaposlenik.IsActive)
+                            {
+                                <span class="badge bg-success">AKTIVAN</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">DEAKTIVIRAN</span>
+                            }
+                        </td>
+                        <td>
+                            @if (zaposlenik.IsActive)
+                            {
+                                <button class="btn btn-sm btn-warning"
+                                        @onclick="() => Deaktiviraj(zaposlenik.Id)">
+                                    Deaktiviraj
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-success"
+                                        @onclick="() => Aktiviraj(zaposlenik.Id)">
+                                    Aktiviraj
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
