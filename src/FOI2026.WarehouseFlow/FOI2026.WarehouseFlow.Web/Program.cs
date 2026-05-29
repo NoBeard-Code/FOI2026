@@ -8,6 +8,7 @@ using FOI2026.WarehouseFlow.Services;
 using FOI2026.WarehouseFlow.Services.Models;
 using FOI2026.WarehouseFlow.Services.Repository_Interfaces;
 using FOI2026.WarehouseFlow.Services.Services;
+using FOI2026.WarehouseFlow.Infrastructure.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +44,14 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+// TODO: ...
+
+builder.Services.AddScoped<ArticleService>();
+// TODO: ...
+
 
 var app = builder.Build();
 

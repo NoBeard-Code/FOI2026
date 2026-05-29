@@ -1,0 +1,59 @@
+﻿@page "/articles"
+
+@using FOI2026.WarehouseFlow.Infrastructure.Data.Models
+@using FOI2026.WarehouseFlow.Services.Services
+@using Microsoft.AspNetCore.Authorization
+
+@inject NavigationManager NavigationManager;
+@inject ArticleService ArticleService;
+
+@attribute [Authorize]
+
+<PageTitle>Article List</PageTitle>
+
+<h1>Article List</h1>
+
+@if (articles == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th aria-label="Temperature in Celsius">Code</th>
+                <th aria-label="Temperature in Fahrenheit">Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var article in articles)
+            {
+                <tr>
+                    <td>@article.Code</td>
+                    <td>@article.Name</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="NavigateToDetails">Details</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <ArticleDetails ArticleId="1"></ArticleDetails>
+}
+
+@code {
+    private IEnumerable<Article> articles = null;
+
+    protected async override Task OnInitializedAsync()
+    {
+        articles = await ArticleService.GetAllArticlesWithStockAsync();
+    }
+
+    private void NavigateToDetails()
+    {
+        NavigationManager.NavigateTo($"/article/{1}");
+    }
+}
