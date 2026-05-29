@@ -58,3 +58,41 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* LOGIN */
+.login-wrapper {
+    margin-top: -1.1rem;
+    margin-left: -2rem;
+    margin-right: -1.5rem;
+    height: calc(100vh - 3.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f4f8;
+    min-height: 100vh;
+}
+
+.login-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-logo {
+    font-size: 48px;
+    color: #02437B;
+}
+
+.login-header h2 {
+    color: #02437B;
+    font-weight: 700;
+    margin-top: 8px;
+}
