@@ -73,6 +73,9 @@ app.MapAdditionalIdentityEndpoints();
 using (var scope = app.Services.CreateScope())
 {
     var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    ctx.Database.Migrate();
+
     var user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var role = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
