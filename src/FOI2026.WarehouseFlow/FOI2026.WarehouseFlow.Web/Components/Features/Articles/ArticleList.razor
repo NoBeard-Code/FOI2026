@@ -18,39 +18,51 @@
 <h1>Pregled artikala</h1>
 
 <div class="row mb-3">
-    <div class="col-md-4">
-        <input class="form-control"
-               placeholder="Pretraži po nazivu ili šifri..."
-               @bind="searchTerm"
-               @bind:event="oninput" />
-    </div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Pretraživanje</label>
+                    <input class="form-control"
+                           placeholder="Naziv ili šifra artikla..."
+                           @bind="searchTerm"
+                           @bind:event="oninput"
+                           @bind:after="ApplyFilters" />
+                </div>
 
-    <div class="col-md-3">
-        <select class="form-select" @bind="selectedCategoryId">
-            <option value="">Sve kategorije</option>
-            @foreach (var category in categories)
-            {
-                <option value="@category.CategoryId">@category.Name</option>
-            }
-        </select>
-    </div>
+                <div class="col-md-3">
+                    <label class="form-label">Kategorija</label>
+                    <select class="form-select"
+                            @bind="selectedCategoryId"
+                            @bind:after="ApplyFilters">
+                        <option value="">Sve kategorije</option>
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.CategoryId">@category.Name</option>
+                        }
+                    </select>
+                </div>
 
-    <div class="col-md-3">
-        <select class="form-select" @bind="selectedStatus">
-            <option value="Sve">Svi statusi</option>
-            <option value="OK">OK</option>
-            <option value="Kritično">Kritično</option>
-        </select>
-    </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-select"
+                            @bind="selectedStatus"
+                            @bind:after="ApplyFilters">
+                        <option value="Sve">Svi statusi</option>
+                        <option value="OK">OK</option>
+                        <option value="Kritično">Kritično</option>
+                    </select>
+                </div>
 
-    <div class="col-md-1">
-        <button class="btn btn-primary w-100" @onclick="ApplyFilters">Filtriraj</button>
-    </div>
-
-    <div class="col-md-1">
-        <button class="btn btn-success w-100" @onclick="GoToAddArticle">
-           Dodaj
-        </button>
+                <div class="col-md-2">
+                    <button type="button"
+                            class="btn btn-success w-100"
+                            @onclick="GoToAddArticle">
+                        + Dodaj artikl
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -145,7 +157,7 @@ else
                 a.Code.ToLower().Contains(normalizedTerm));
         }
 
-        articles = result;
+        articles = result.ToList();
     }
 
     private void GoToAddArticle()
