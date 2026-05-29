@@ -1,4 +1,6 @@
 ﻿@page "/articles/add"
+@rendermode InteractiveServer
+
 
 @using FOI2026.WarehouseFlow.Infrastructure.Data.Models
 @using FOI2026.WarehouseFlow.Services.Services
@@ -133,6 +135,7 @@
 
         try
         {
+            article.Status = "OK";
             await ArticleService.AddArticleAsync(article);
             successMessage = "Artikl je uspješno dodan.";
             article = new Article(); // reset forme
