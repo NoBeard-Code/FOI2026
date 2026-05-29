@@ -120,6 +120,14 @@
                 return;
             }
 
+            // provjeri je li korisnik aktivan prije logina
+            var user = await UserManager.FindByNameAsync(Input.UserName);
+            if (user != null && !user.IsActive)
+            {
+                errorMessage = "Error: Vaš račun je deaktiviran. Obratite se administratoru.";
+                return;
+            }
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
             result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
