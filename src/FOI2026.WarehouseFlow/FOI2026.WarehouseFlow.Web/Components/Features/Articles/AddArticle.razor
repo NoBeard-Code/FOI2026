@@ -1,0 +1,237 @@
+﻿@page "/articles/add"
+
+@using FOI2026.WarehouseFlow.Infrastructure.Data.Models
+@using FOI2026.WarehouseFlow.Services.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using FOI2026.WarehouseFlow.Services
+
+@inject NavigationManager NavigationManager
+@inject ArticleService ArticleService
+@inject ApplicationDbContext DbContext
+
+@attribute [Authorize]
+
+<PageTitle>Dodavanje artikla</PageTitle>
+
+<h1>Dodavanje artikla</h1>
+
+<a href="/articles" class="back-link">&#8249; Povratak</a>
+
+<div class="form-card">
+    <div class="form-card-header">
+        <strong>Detalji o artiklu</strong>
+    </div>
+
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Šifra artikla:</label>
+            <input class="form-control" @bind="article.Code" placeholder="npr. 1001" />
+        </div>
+
+        <div class="form-group">
+            <label>Naziv artikla:</label>
+            <input class="form-control" @bind="article.Name" placeholder="npr. Laptop Lenovo ThinkPad" />
+        </div>
+
+        <div class="form-group">
+            <label>Maksimalno stanje na skladištu:</label>
+            <input class="form-control" type="number" @bind="article.MaxStock" />
+        </div>
+
+        <div class="form-group">
+            <label>Minimalno stanje na skladištu:</label>
+            <input class="form-control" type="number" @bind="article.MinStock" />
+        </div>
+
+        <div class="form-group">
+            <label>Kategorija:</label>
+            <select class="form-select" @bind="article.CategoryId">
+                <option value="">-- Odaberi kategoriju --</option>
+                @foreach (var category in categories)
+                {
+                    <option value="@category.CategoryId">@category.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Jedinica mjere:</label>
+            <select class="form-select" @bind="article.Unit">
+                <option value="">-- Odaberi jedinicu --</option>
+                <option value="Kom">Kom</option>
+                <option value="kg">kg</option>
+                <option value="l">l</option>
+                <option value="m">m</option>
+                <option value="m²">m²</option>
+                <option value="m³">m³</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-footer">
+        <button class="btn btn-primary" @onclick="SaveArticle">Spremi</button>
+    </div>
+</div>
+
+@if (successMessage != null)
+{
+    <div class="alert-success">
+        <span>&#10003; @successMessage</span>
+        <button class="alert-close" @onclick="() => successMessage = null">&#10005;</button>
+    </div>
+}
+
+@if (errorMessage != null)
+{
+    <div class="alert-error">
+        <span>&#10005; @errorMessage</span>
+        <button class="alert-close" @onclick="() => errorMessage = null">&#10005;</button>
+    </div>
+}
+
+@code {
+    private Article article = new Article();
+    private List<Category> categories = new();
+
+    private string? successMessage;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await DbContext.Categories.ToListAsync();
+    }
+
+    private async Task SaveArticle()
+    {
+        successMessage = null;
+        errorMessage = null;
+
+        if (string.IsNullOrWhiteSpace(article.Code))
+        {
+            errorMessage = "Šifra artikla je obavezna.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(article.Name))
+        {
+            errorMessage = "Naziv artikla je obavezan.";
+            return;
+        }
+
+        if (article.MinStock < 0 || article.MaxStock < 0)
+        {
+            errorMessage = "Stanje na skladištu ne može biti negativno.";
+            return;
+        }
+
+        if (article.MaxStock < article.MinStock)
+        {
+            errorMessage = "Maksimalno stanje ne može biti manje od minimalnog.";
+            return;
+        }
+
+        try
+        {
+            await ArticleService.AddArticleAsync(article);
+            successMessage = "Artikl je uspješno dodan.";
+            article = new Article(); // reset forme
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Greška pri dodavanju artikla: {ex.Message}";
+        }
+    }
+}
+
+<style>
+    h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        color: #555;
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+        color: #000;
+    }
+
+    .form-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1.5rem;
+        background: #fff;
+        max-width: 780px;
+    }
+
+    .form-card-header {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        color: #333;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .form-group label {
+        font-size: 0.875rem;
+        color: #444;
+    }
+
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+    }
+
+    .alert-success,
+    .alert-error {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 780px;
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border-left: 4px solid;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .alert-success {
+        background: #f8f8f8;
+        border-color: #6c757d;
+        color: #333;
+    }
+
+    .alert-error {
+        background: #fff5f5;
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .alert-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: inherit;
+        padding: 0;
+    }
+</style>

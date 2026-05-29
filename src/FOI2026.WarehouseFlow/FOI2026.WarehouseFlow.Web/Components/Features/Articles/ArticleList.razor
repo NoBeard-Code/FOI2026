@@ -42,8 +42,14 @@
         </select>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-1">
         <button class="btn btn-primary w-100" @onclick="ApplyFilters">Filtriraj</button>
+    </div>
+
+    <div class="col-md-1">
+        <button class="btn btn-success w-100" @onclick="GoToAddArticle">
+           Dodaj
+        </button>
     </div>
 </div>
 
@@ -141,6 +147,10 @@ else
         articles = result;
     }
 
+    private void GoToAddArticle()
+    {
+        NavigationManager.NavigateTo("articles/add");
+    }
     private void EditArticle(int articleId)
     {
         NavigationManager.NavigateTo($"/articles/edit/{articleId}");
