@@ -138,4 +138,96 @@ else
             errorMessage = ex.InnerException?.Message ?? ex.Message;
         }
     }
+
 }
+<style>
+    h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        color: #555;
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+
+        .back-link:hover {
+            color: #000;
+        }
+
+    .form-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1.5rem;
+        background: #fff;
+        max-width: 780px;
+    }
+
+    .form-card-header {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        color: #333;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+        .form-group label {
+            font-size: 0.875rem;
+            color: #444;
+        }
+
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+    }
+
+    .alert-success,
+    .alert-error {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 780px;
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border-left: 4px solid;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .alert-success {
+        background: #f8f8f8;
+        border-color: #6c757d;
+        color: #333;
+    }
+
+    .alert-error {
+        background: #fff5f5;
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .alert-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: inherit;
+        padding: 0;
+    }
+</style>
