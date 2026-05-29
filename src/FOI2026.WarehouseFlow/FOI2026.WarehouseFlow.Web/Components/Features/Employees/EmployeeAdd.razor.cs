@@ -22,6 +22,7 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
 
         private string firstName = string.Empty;
         private string lastName = string.Empty;
+        private string username = string.Empty;
         private string email = string.Empty;
         private string password = string.Empty;
         private string selectedRole = string.Empty;
@@ -42,6 +43,7 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
 
             if (string.IsNullOrWhiteSpace(firstName) ||
                 string.IsNullOrWhiteSpace(lastName) ||
+                string.IsNullOrWhiteSpace(username) ||
                 string.IsNullOrWhiteSpace(email) ||
                 string.IsNullOrWhiteSpace(password) ||
                 string.IsNullOrWhiteSpace(selectedRole))
@@ -50,9 +52,24 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
                 return;
             }
 
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                if (addr.Address != email)
+                {
+                    greska = "Email adresa nije ispravnog formata.";
+                    return;
+                }
+            }
+            catch
+            {
+                greska = "Email adresa nije ispravnog formata.";
+                return;
+            }
+
             var user = new ApplicationUser
             {
-                UserName = email,
+                UserName = username,
                 Email = email,
                 FirstName = firstName,
                 LastName = lastName,
@@ -73,6 +90,7 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Employees
             uspjeh = true;
             firstName = string.Empty;
             lastName = string.Empty;
+            username = string.Empty;
             email = string.Empty;
             password = string.Empty;
             selectedRole = string.Empty;

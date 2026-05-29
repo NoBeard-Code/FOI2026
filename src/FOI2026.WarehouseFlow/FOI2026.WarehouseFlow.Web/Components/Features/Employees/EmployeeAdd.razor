@@ -19,22 +19,27 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Ime</label>
-                    <input class="form-control" @bind="firstName" placeholder="Placeholder" />
+                    <input class="form-control" @bind="firstName" placeholder="Ime" />
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Prezime</label>
-                    <input class="form-control" @bind="lastName" placeholder="Placeholder" />
+                    <input class="form-control" @bind="lastName" placeholder="Prezime" />
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Korisničko ime (Email)</label>
-                <input class="form-control" @bind="email" placeholder="Placeholder" />
+                <label class="form-label">Korisničko ime</label>
+                <input class="form-control" @bind="username" placeholder="Korisničko ime" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input class="form-control" type="email" @bind="email" placeholder="ime@tvrtka.com" />
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Lozinka</label>
-                <input class="form-control" type="password" @bind="password" placeholder="Placeholder" />
+                <input class="form-control" type="password" @bind="password" placeholder="Lozinka" />
             </div>
 
             <div class="mb-3">
@@ -43,7 +48,9 @@
                     <option value="">-- Odaberi ulogu --</option>
                     @foreach (var role in roles)
                     {
-                        <option value="@role.Name">@role.Name</option>
+                        <option value="@role.Name">
+                            @(role.Name == "Worker" ? "Radnik" : role.Name)
+                        </option>
                     }
                 </select>
             </div>
