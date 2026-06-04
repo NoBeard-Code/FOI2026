@@ -1,0 +1,113 @@
+﻿@page "/suppliers"
+@rendermode InteractiveServer
+@using FOI2026.WarehouseFlow.Infrastructure.Data.Models
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-fluid py-3">
+    <div class="page-header">
+        <h3>Popis dobavljača</h3>
+
+        <button class="btn btn-primary" @onclick="DodajPartnera">
+            <i class="bi bi-plus-lg"></i> Dodaj dobavljača
+        </button>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input class="form-control"
+                   placeholder="Pretraži po nazivu ili šifri..."
+                   @bind="search"
+                   @bind:event="oninput" />
+        </div>
+    </div>
+
+    @if (partneri == null)
+    {
+        <p>Učitavanje...</p>
+    }
+    else if (!FiltriraniPartneri.Any())
+    {
+        <div class="table-card p-4 text-center text-muted">
+            <i class="bi bi-truck fs-1"></i>
+            <p class="mt-2">Nema dobavljača.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-card">
+            <table class="wf-table">
+                <thead>
+                    <tr>
+                        <th>Šifra</th>
+                        <th>Naziv</th>
+                        <th>OIB</th>
+                        <th>Adresa</th>
+                        <th>Kontakt</th>
+                        <th>Email</th>
+                        <th>Akcije</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var partner in PartneriNaStranici)
+                    {
+                        <tr>
+                            <td>@partner.PartnerId</td>
+                            <td>@partner.Name</td>
+                            <td>@partner.OIB</td>
+                            <td>@partner.Address</td>
+                            <td>@partner.Contact</td>
+                            <td>@partner.Email</td>
+
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-warning"
+                                            @onclick="() => Uredi(partner.PartnerId)">
+                                        Uredi
+                                    </button>
+
+                                    <button class="btn btn-sm btn-danger"
+                                            @onclick="() => Obrisi(partner.PartnerId)">
+                                        Obriši
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (UkupnoStranica > 1)
+        {
+            <nav class="mt-3">
+                <ul class="pagination justify-content-center">
+
+                    <li class="page-item @(trenutnaStranica == 1 ? "disabled" : "")">
+                        <button class="page-link" @onclick="() => IdiNaStranicu(trenutnaStranica - 1)">
+                            Prethodni
+                        </button>
+                    </li>
+
+                    @for (int i = 1; i <= UkupnoStranica; i++)
+                    {
+                        var str = i;
+                        <li class="page-item @(trenutnaStranica == str ? "active" : "")">
+                            <button class="page-link" @onclick="() => IdiNaStranicu(str)">
+                                @str
+                            </button>
+                        </li>
+                    }
+
+                    <li class="page-item @(trenutnaStranica == UkupnoStranica ? "disabled" : "")">
+                        <button class="page-link" @onclick="() => IdiNaStranicu(trenutnaStranica + 1)">
+                            Sljedeći
+                        </button>
+                    </li>
+
+                </ul>
+            </nav>
+        }
+    }
+</div>
