@@ -39,6 +39,7 @@ namespace FOI2026.WarehouseFlow.Services.Services
                 UserId = order.UserId,
                 UserFullName = $"{order.User.FirstName} {order.User.LastName}",
                 ChangeType = "-",
+                ChangeTypeName = "Otpis",
                 Quantity = order.OrderItems.Where(oi => oi.ArticleId == articleId).Sum(oi => oi.Quantity),
                 NewStock = 0
             });
@@ -54,6 +55,7 @@ namespace FOI2026.WarehouseFlow.Services.Services
                 UserId = deliveryNote.UserId,
                 UserFullName = $"{deliveryNote.User.FirstName} {deliveryNote.User.LastName}",
                 ChangeType = "+",
+                ChangeTypeName = "Dodavanje",
                 Quantity = deliveryNote.DeliveryNoteItems.Where(di => di.ArticleId == articleId).Sum(di => di.Quantity),
                 NewStock = 0
             });

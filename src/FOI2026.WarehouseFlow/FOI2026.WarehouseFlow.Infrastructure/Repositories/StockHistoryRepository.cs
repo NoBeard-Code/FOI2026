@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
 using FOI2026.WarehouseFlow.Services;
+using FOI2026.WarehouseFlow.Services.Repository_Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FOI2026.WarehouseFlow.Infrastructure.Repositories
 {
-    public class StockHistoryRepository
+    public class StockHistoryRepository : IStockHistoryRepository
     {
         private readonly ApplicationDbContext _context;
 
