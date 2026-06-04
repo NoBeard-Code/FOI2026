@@ -1,0 +1,233 @@
+﻿@page "/articles/edit/{id:int}"
+@rendermode InteractiveServer
+
+@using FOI2026.WarehouseFlow.Infrastructure.Data.Models
+@using FOI2026.WarehouseFlow.Services.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using FOI2026.WarehouseFlow.Services
+
+@inject NavigationManager NavigationManager
+@inject ArticleService ArticleService
+@inject ApplicationDbContext DbContext
+
+@attribute [Authorize]
+
+<PageTitle>Uređivanje artikla</PageTitle>
+
+@if (article == null)
+{
+    <p><em>Učitavanje...</em></p>
+}
+else
+{
+    <h1>Uređivanje artikla</h1>
+
+    <a href="/articles" class="back-link">&#8249; Povratak</a>
+
+    <div class="form-card">
+        <div class="form-card-header">
+            <strong>Detalji o artiklu</strong>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Šifra artikla:</label>
+                <input class="form-control" @bind="article.Code" />
+            </div>
+
+            <div class="form-group">
+                <label>Naziv artikla:</label>
+                <input class="form-control" @bind="article.Name" />
+            </div>
+
+            <div class="form-group">
+                <label>Maksimalno stanje:</label>
+                <input class="form-control" type="number" @bind="article.MaxStock" />
+            </div>
+
+            <div class="form-group">
+                <label>Minimalno stanje:</label>
+                <input class="form-control" type="number" @bind="article.MinStock" />
+            </div>
+
+            <div class="form-group">
+                <label>Kategorija:</label>
+                <select class="form-select" @bind="article.CategoryId">
+                    @foreach (var category in categories)
+                    {
+                        <option value="@category.CategoryId">
+                            @category.Name
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Jedinica mjere:</label>
+                <select class="form-select" @bind="article.Unit">
+                    <option value="Kom">Kom</option>
+                    <option value="kg">kg</option>
+                    <option value="l">l</option>
+                    <option value="m">m</option>
+                    <option value="m²">m²</option>
+                    <option value="m³">m³</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button class="btn btn-primary"
+                    @onclick="UpdateArticle">
+                Spremi promjene
+            </button>
+        </div>
+    </div>
+
+    @if (successMessage != null)
+    {
+        <div class="alert-success mt-3">
+            @successMessage
+        </div>
+    }
+
+    @if (errorMessage != null)
+    {
+        <div class="alert-error mt-3">
+            @errorMessage
+        </div>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public int id { get; set; }
+
+    private Article? article;
+
+    private List<Category> categories = new();
+
+    private string? successMessage;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await DbContext.Categories.ToListAsync();
+
+        article = await ArticleService.GetArticleByIdAsync(id);
+
+        if (article == null)
+        {
+            NavigationManager.NavigateTo("/articles");
+        }
+    }
+
+    private async Task UpdateArticle()
+    {
+        try
+        {
+            await ArticleService.UpdateArticleAsync(article!);
+
+            successMessage = "Artikl je uspješno ažuriran.";
+
+            NavigationManager.NavigateTo("/articles");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.InnerException?.Message ?? ex.Message;
+        }
+    }
+
+}
+<style>
+    h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        color: #555;
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+
+        .back-link:hover {
+            color: #000;
+        }
+
+    .form-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1.5rem;
+        background: #fff;
+        max-width: 780px;
+    }
+
+    .form-card-header {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        color: #333;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+        .form-group label {
+            font-size: 0.875rem;
+            color: #444;
+        }
+
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+    }
+
+    .alert-success,
+    .alert-error {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 780px;
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border-left: 4px solid;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .alert-success {
+        background: #f8f8f8;
+        border-color: #6c757d;
+        color: #333;
+    }
+
+    .alert-error {
+        background: #fff5f5;
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .alert-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: inherit;
+        padding: 0;
+    }
+</style>

@@ -1,0 +1,213 @@
+﻿@page "/articles"
+@rendermode InteractiveServer
+
+@using FOI2026.WarehouseFlow.Infrastructure.Data.Models
+@using FOI2026.WarehouseFlow.Services.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using FOI2026.WarehouseFlow.Services
+
+@inject NavigationManager NavigationManager
+@inject ArticleService ArticleService
+@inject ApplicationDbContext DbContext
+
+@attribute [Authorize]
+
+<PageTitle>Pregled artikala</PageTitle>
+
+<h1>Pregled artikala</h1>
+
+<div class="row mb-3">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Pretraživanje</label>
+                    <input class="form-control"
+                           placeholder="Naziv ili šifra artikla..."
+                           @bind="searchTerm"
+                           @bind:event="oninput"
+                           @bind:after="ApplyFilters" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Kategorija</label>
+                    <select class="form-select"
+                            @bind="selectedCategoryId"
+                            @bind:after="ApplyFilters">
+                        <option value="">Sve kategorije</option>
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.CategoryId">@category.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-select"
+                            @bind="selectedStatus"
+                            @bind:after="ApplyFilters">
+                        <option value="Sve">Svi statusi</option>
+                        <option value="OK">OK</option>
+                        <option value="Kritično">Kritično</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="button"
+                            class="btn btn-success w-100"
+                            @onclick="GoToAddArticle">
+                        + Dodaj artikl
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (articles == null)
+{
+    <p><em>Učitavanje...</em></p>
+}
+else if (!articles.Any())
+{
+    <p>Nema artikala za prikaz.</p>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Šifra</th>
+                <th>Naziv</th>
+                <th>Kategorija</th>
+                <th>Jedinica mjere</th>
+                <th>Trenutno stanje</th>
+                <th>Minimalno stanje</th>
+                <th>Maksimalno stanje</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var article in articles)
+            {
+                <tr>
+                    <td>@article.Code</td>
+                    <td>@article.Name</td>
+                    <td>@article.Category?.Name</td>
+                    <td>@article.Unit</td>
+                    <td>@article.CurrentStock</td>
+                    <td>@article.MinStock</td>
+                    <td>@article.MaxStock</td>
+                    <td>
+                        @if (article.Status == "Kritično")
+                        {
+                            <span class="badge bg-danger">Kritično</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">OK</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary me-1"
+                                title="Uredi"
+                                @onclick="() => EditArticle(article.ArticleId)">
+                            ✏️
+                        </button>
+
+                        <button class="btn btn-sm btn-outline-danger"
+                                title="Obriši"
+                                @onclick="() => ShowDeleteConfirmation(article.ArticleId)">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (showDeleteModal)
+    {
+        <div class="modal-backdrop-custom">
+            <div class="modal-box">
+                <h5>Potvrda brisanja</h5>
+                <p>Jeste li sigurni da želite obrisati ovaj artikl?</p>
+
+                <div class="modal-actions">
+                    <button class="btn btn-danger" @onclick="ConfirmDelete">
+                        Da
+                    </button>
+
+                    <button class="btn btn-secondary" @onclick="CancelDelete">
+                        Ne
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    private IEnumerable<Article>? articles;
+    private List<Category> categories = new();
+
+    private string searchTerm = "";
+    private string selectedStatus = "Sve";
+    private int? selectedCategoryId;
+    private bool showDeleteModal = false;
+    private int articleIdToDelete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await DbContext.Categories.ToListAsync();
+        articles = await ArticleService.GetAllArticlesWithStockAsync();
+    }
+
+    private async Task ApplyFilters()
+    {
+        var result = await ArticleService.FilterByCategoryAsync(selectedCategoryId, selectedStatus);
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            var normalizedTerm = searchTerm.Trim().ToLower();
+
+            result = result.Where(a =>
+                a.Name.ToLower().Contains(normalizedTerm) ||
+                a.Code.ToLower().Contains(normalizedTerm));
+        }
+
+        articles = result.ToList();
+    }
+
+    private void GoToAddArticle()
+    {
+        NavigationManager.NavigateTo("articles/add");
+    }
+    private void EditArticle(int articleId)
+    {
+        NavigationManager.NavigateTo($"/articles/edit/{articleId}");
+    }
+
+ 
+    private void ShowDeleteConfirmation(int articleId)
+    {
+        articleIdToDelete = articleId;
+        showDeleteModal = true;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        await ArticleService.DeleteArticleAsync(articleIdToDelete);
+        articles = await ArticleService.GetAllArticlesWithStockAsync();
+
+        showDeleteModal = false;
+    }
+
+    private void CancelDelete()
+    {
+        showDeleteModal = false;
+    }
+}
+
