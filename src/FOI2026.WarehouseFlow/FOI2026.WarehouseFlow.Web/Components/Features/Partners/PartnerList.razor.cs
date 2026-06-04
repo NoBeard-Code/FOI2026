@@ -22,7 +22,14 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Partners
 
         protected override async Task OnInitializedAsync()
         {
-            sviPartneri = (await PartnerService.GetAllSuppliersAsync()).ToList();
+            await Ucitaj();
+        }
+
+        private async Task Ucitaj()
+        {
+            sviPartneri = (await PartnerService.GetAllSuppliersAsync())
+                .ToList();
+
             partneri = sviPartneri;
         }
 
@@ -48,12 +55,12 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Partners
 
         private void DodajPartnera()
         {
-            Navigation.NavigateTo("/partners/add");
+            Navigation.NavigateTo("/suppliers/add");
         }
 
         private void Uredi(int id)
         {
-            Navigation.NavigateTo($"/partners/edit/{id}");
+            Navigation.NavigateTo($"/suppliers/edit/{id}");
         }
 
         private async Task Obrisi(int id)

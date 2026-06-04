@@ -27,8 +27,4 @@
     <ProjectReference Include="..\FOI2026.WarehouseFlow.Services\FOI2026.WarehouseFlow.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Features\Partners\" />
-  </ItemGroup>
-
 </Project>

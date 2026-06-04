@@ -1,0 +1,55 @@
+﻿@page "/suppliers/edit/{Id:int}"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container">
+
+    <div class="d-flex align-items-center mb-3">
+        <a href="/suppliers" class="btn btn-link ps-0">
+            <i class="bi bi-arrow-left"></i> Povratak
+        </a>
+    </div>
+
+    <h3>Uređivanje dobavljača</h3>
+
+    <div class="card mt-3">
+        <div class="card-body">
+
+            <div class="mb-3">
+                <label>Naziv</label>
+                <input class="form-control" @bind="partner.Name" />
+            </div>
+
+            <div class="mb-3">
+                <label>OIB</label>
+                <input class="form-control" @bind="partner.OIB" />
+            </div>
+
+            <div class="mb-3">
+                <label>Adresa</label>
+                <input class="form-control" @bind="partner.Address" />
+            </div>
+
+            <div class="mb-3">
+                <label>Kontakt</label>
+                <input class="form-control" @bind="partner.Contact" />
+            </div>
+
+            <div class="mb-3">
+                <label>Email</label>
+                <input class="form-control" @bind="partner.Email" />
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" @onclick="Spremi">Spremi</button>
+            </div>
+
+            @if (!string.IsNullOrEmpty(greska))
+            {
+                <div class="alert alert-danger mt-3">@greska</div>
+            }
+
+        </div>
+    </div>
+</div>
