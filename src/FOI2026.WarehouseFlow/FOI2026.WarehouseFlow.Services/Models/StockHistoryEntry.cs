@@ -13,5 +13,8 @@ namespace FOI2026.WarehouseFlow.Services.Models
         public string ChangeType { get; set; }
         public int Quantity { get; set; }
         public int NewStock { get; set; }
+        public string? ChangeTypeName { get; set; }  
+        public string? Note { get; set; }
+
     }
 }
