@@ -56,7 +56,8 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ArticleService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleService>();
-
+builder.Services.AddScoped<IStockHistoryRepository, StockHistoryRepository>();
+builder.Services.AddScoped<StockHistoryService>();
 
 
 

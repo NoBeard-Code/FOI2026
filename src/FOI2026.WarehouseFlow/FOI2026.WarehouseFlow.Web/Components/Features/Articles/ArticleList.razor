@@ -112,6 +112,13 @@ else
                         }
                     </td>
                     <td class="text-end">
+
+                        <button class="btn btn-sm btn-outline-info me-1"
+                                title="Povijest zaliha"
+                                @onclick="() => GoToStockHistory(article.ArticleId)">
+                            📋
+                        </button>
+
                         <button class="btn btn-sm btn-outline-secondary me-1"
                                 title="Uredi"
                                 @onclick="() => EditArticle(article.ArticleId)">
@@ -189,7 +196,10 @@ else
     {
         NavigationManager.NavigateTo($"/articles/edit/{articleId}");
     }
-
+    private void GoToStockHistory(int articleId)
+    {
+        NavigationManager.NavigateTo("/articles/" + articleId + "/stock-history");
+    }
  
     private void ShowDeleteConfirmation(int articleId)
     {
