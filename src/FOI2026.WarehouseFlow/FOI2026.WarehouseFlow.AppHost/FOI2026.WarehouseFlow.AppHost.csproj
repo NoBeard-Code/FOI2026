@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.0.1">
+<Project Sdk="Aspire.AppHost.Sdk/13.2.4">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,6 +7,11 @@
     <Nullable>enable</Nullable>
     <UserSecretsId>dc0a1b9c-faa8-4ef7-9a2d-332e43bbfb37</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Aspire.Hosting.AppHost" Version="13.2.4" />
+	  <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.2.4" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FOI2026.WarehouseFlow.Web\FOI2026.WarehouseFlow.Web.csproj" />

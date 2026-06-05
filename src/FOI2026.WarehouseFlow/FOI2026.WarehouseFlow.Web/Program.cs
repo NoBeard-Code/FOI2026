@@ -33,6 +33,18 @@ builder.Services.AddAuthentication(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
+
+static bool IsAspireConfigured()
+{
+    return !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DOTNET_ASPIRE_CONTAINER_RUNTIME")) ||
+                              !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL"));
+}
+
+if (IsAspireConfigured())
+{
+    connectionString = builder.Configuration.GetConnectionString("foi2026-warehouseflow-sql-db");
+}
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
