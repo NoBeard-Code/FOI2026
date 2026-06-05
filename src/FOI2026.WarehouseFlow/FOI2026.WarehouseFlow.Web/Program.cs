@@ -53,6 +53,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPartnerRepository, PartnerRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IDeliveryNoteRepository, DeliveryNoteRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IDeliveryNoteItemRepository, DeliveryNoteItemRepository>();
 
 // Services
 builder.Services.AddScoped<ArticleService>();
@@ -62,6 +65,10 @@ builder.Services.AddScoped<IStockHistoryRepository, StockHistoryRepository>();
 builder.Services.AddScoped<StockHistoryService>();
 builder.Services.AddScoped<PartnerService>();
 builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<DeliveryNoteService>();
+builder.Services.AddScoped<OrderItemService>();
+builder.Services.AddScoped<DeliveryNoteItemService>();
 
 
 var app = builder.Build();
