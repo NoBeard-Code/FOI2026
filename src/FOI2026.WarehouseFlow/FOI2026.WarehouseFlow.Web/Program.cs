@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -73,6 +75,8 @@ builder.Services.AddScoped<DeliveryNoteItemService>();
 
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -149,11 +153,11 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Containers
             new Category
             {
                 Name = "Elektronika",
-                Description = "ElektroniËka oprema i dijelovi"
+                Description = "Elektroni√®ka oprema i dijelovi"
             },
             new Category
             {
-                Name = "Ambalaûa",
+                Name = "Ambala≈æa",
                 Description = "Materijali za pakiranje"
             },
             new Category
@@ -171,9 +175,9 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Containers
         ctx.Partners.AddRange(
             new Partner
             {
-                Name = "DobavljaË d.o.o.",
+                Name = "Dobavlja√® d.o.o.",
                 OIB = 123456789,
-                Address = "ZagrebaËka 1, Varaûdin",
+                Address = "Zagreba√®ka 1, Vara≈ædin",
                 Contact = "0911234567",
                 Email = "dobavljac@test.com",
                 IsSupplier = true
@@ -195,7 +199,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Containers
     if (!ctx.Articles.Any())
     {
         var elektronika = ctx.Categories.First(c => c.Name == "Elektronika");
-        var ambalaza = ctx.Categories.First(c => c.Name == "Ambalaûa");
+        var ambalaza = ctx.Categories.First(c => c.Name == "Ambala≈æa");
         var alat = ctx.Categories.First(c => c.Name == "Alat");
 
         ctx.Articles.AddRange(
@@ -206,7 +210,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Containers
                 Unit = "kom",
                 MinStock = 5,
                 MaxStock = 50,
-                Description = "RuËni barkod skener",
+                Description = "Ru√®ni barkod skener",
                 Status = "Aktivan",
                 CategoryId = elektronika.CategoryId
             },
@@ -223,12 +227,12 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Containers
             },
             new Article
             {
-                Name = "RuËni viliËar",
+                Name = "Ru√®ni vili√®ar",
                 Code = "ART-003",
                 Unit = "kom",
                 MinStock = 1,
                 MaxStock = 10,
-                Description = "ViliËar za skladiöte",
+                Description = "Vili√®ar za skladi≈°te",
                 Status = "Aktivan",
                 CategoryId = alat.CategoryId
             }
@@ -250,7 +254,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Containers
                 PartnerId = partner.PartnerId,
                 ArticleId = article.ArticleId,
                 Status = "Kreirano",
-                Description = "Testna narudûba",
+                Description = "Testna narud≈æba",
                 UserId = admin.Id
             }
         );
