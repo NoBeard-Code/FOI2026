@@ -2,9 +2,13 @@
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
-  <Project Path="FOI2026.WarehouseFlow.AppHost/FOI2026.WarehouseFlow.AppHost.csproj" Id="cea75d41-ea5b-42c5-9215-3cbd6b042772" />
+  <Project Path="FOI2026.WarehouseFlow.AppHost/FOI2026.WarehouseFlow.AppHost.csproj" Id="cea75d41-ea5b-42c5-9215-3cbd6b042772">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="FOI2026.WarehouseFlow.Infrastructure/FOI2026.WarehouseFlow.Infrastructure.csproj" />
-  <Project Path="FOI2026.WarehouseFlow.ServiceDefaults/FOI2026.WarehouseFlow.ServiceDefaults.csproj" />
+  <Project Path="FOI2026.WarehouseFlow.ServiceDefaults/FOI2026.WarehouseFlow.ServiceDefaults.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="FOI2026.WarehouseFlow.Services.Tests/FOI2026.WarehouseFlow.Services.Tests.csproj" Id="51f9daa9-d37b-48e6-804d-767b0a1ae233" />
   <Project Path="FOI2026.WarehouseFlow.Services/FOI2026.WarehouseFlow.Services.csproj" Id="2b026954-ff68-4712-9dca-2f15ee70f3d8" />
   <Project Path="FOI2026.WarehouseFlow.Web/FOI2026.WarehouseFlow.Web.csproj" />

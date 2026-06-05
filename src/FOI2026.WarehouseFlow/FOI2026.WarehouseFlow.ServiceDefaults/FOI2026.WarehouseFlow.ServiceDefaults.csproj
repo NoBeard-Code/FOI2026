@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="bunit" Version="2.7.2" />
+    <PackageReference Include="bunit.core" Version="1.40.0" />
+    <PackageReference Include="bunit.web" Version="1.40.0" />
 
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.0" />
