@@ -55,14 +55,12 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Orders
 
         protected override async Task OnInitializedAsync()
         {
-            // Dohvati trenutnog korisnika
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             trenutniUserId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
             sviPartneri = (await PartnerService.GetAllSuppliersAsync()).ToList();
             sviArtikli = await DbContext.Articles.ToListAsync();
 
-            // Auto-generiraj sljedeći broj narudžbe
             var postojeciIds = await DbContext.Orders.Select(o => o.OrderId).ToListAsync();
             int sljedeciId = postojeciIds.Any() ? postojeciIds.Max() + 1 : 1;
             generiraniKod = sljedeciId.ToString();
@@ -202,7 +200,6 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Orders
 
             await OrderService.AddOrderAsync(narudzba);
 
-            // Regeneriraj broj za eventualnu sljedeću narudžbu u istoj sesiji
             var noviIds = await DbContext.Orders.Select(o => o.OrderId).ToListAsync();
             int sljedeciId = noviIds.Any() ? noviIds.Max() + 1 : 1;
             generiraniKod = sljedeciId.ToString();

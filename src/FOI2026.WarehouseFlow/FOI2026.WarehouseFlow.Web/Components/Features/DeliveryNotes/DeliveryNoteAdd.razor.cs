@@ -55,14 +55,12 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.DeliveryNotes
 
         protected override async Task OnInitializedAsync()
         {
-            // Dohvati trenutnog korisnika
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             trenutniUserId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
             sviPartneri = (await PartnerService.GetAllSuppliersAsync()).ToList();
             sviArtikli = await DbContext.Articles.ToListAsync();
 
-            // Auto-generiraj sljedeći broj otpremnice
             var postojeciIds = await DbContext.DeliveryNotes.Select(d => d.DeliveryNoteId).ToListAsync();
             int sljedeciId = postojeciIds.Any() ? postojeciIds.Max() + 1 : 1;
             generiraniKod = sljedeciId.ToString();
@@ -202,7 +200,6 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.DeliveryNotes
 
             await DeliveryNoteService.AddDeliveryNoteAsync(otpremnica);
 
-            // Regeneriraj broj za eventualnu sljedeću otpremnicu u istoj sesiji
             var noviIds = await DbContext.DeliveryNotes.Select(d => d.DeliveryNoteId).ToListAsync();
             int sljedeciId = noviIds.Any() ? noviIds.Max() + 1 : 1;
             generiraniKod = sljedeciId.ToString();
