@@ -1,14 +1,15 @@
-using FOI2026.WarehouseFlow.Web.Components;
-using FOI2026.WarehouseFlow.Web.Components.Account;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using FOI2026.WarehouseFlow.Infrastructure.Data.Models;
+using FOI2026.WarehouseFlow.Infrastructure.Repositories;
 using FOI2026.WarehouseFlow.Services;
 using FOI2026.WarehouseFlow.Services.Models;
 using FOI2026.WarehouseFlow.Services.Repository_Interfaces;
 using FOI2026.WarehouseFlow.Services.Services;
-using FOI2026.WarehouseFlow.Infrastructure.Repositories;
+using FOI2026.WarehouseFlow.Web.Components;
+using FOI2026.WarehouseFlow.Web.Components.Account;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,7 +87,14 @@ else
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsEnvironment("Containers"))
+{
+    app.UseHttpsRedirection();
+}
+else
+{
+    StaticWebAssetsLoader.UseStaticWebAssets(app.Environment, app.Configuration);
+}
 
 app.UseAntiforgery();
 
@@ -97,8 +105,7 @@ app.MapRazorComponents<App>()
 
 app.MapAdditionalIdentityEndpoints();
 
-
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Containers"))
 {
     using var scope = app.Services.CreateScope();
 
