@@ -16,7 +16,6 @@ namespace FOI2026.WarehouseFlow.Services.Services
             _orderRepository = orderRepository;
         }
 
-        // 1. UKUPNO SKLADIŠTE (STVARNI STOCK)
         public async Task<int> GetTotalStockQuantityAsync()
         {
             var articles = await _articleRepository.GetAllWithStockDataAsync();
@@ -34,7 +33,6 @@ namespace FOI2026.WarehouseFlow.Services.Services
             return totalStock;
         }
 
-        // 2. VRIJEDNOST ZALIHA / PRODAJE
         public async Task<decimal> GetStockValueAsync()
         {
             var articles = await _articleRepository.GetAllWithStockDataAsync();
@@ -50,7 +48,6 @@ namespace FOI2026.WarehouseFlow.Services.Services
             return total;
         }
 
-        // 3. TOP 5 NAJPRODAVANIJIH
         public async Task<List<(string Name, int Quantity)>> GetTopSellingArticlesAsync()
         {
             var articles = await _articleRepository.GetAllWithStockDataAsync();
@@ -67,7 +64,6 @@ namespace FOI2026.WarehouseFlow.Services.Services
                 .ToList();
         }
 
-        // 4. ZADNJA NARUDŽBA
         public async Task<Order?> GetLatestOrderWithDetailsAsync()
         {
             var orders = await _orderRepository.GetAllAsync();

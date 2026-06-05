@@ -1,11 +1,12 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
 
 <div class="container mt-4">
 
     <h3>Dashboard</h3>
 
-    <!-- KARTICE -->
     <div class="row mt-3">
 
         <div class="col-md-6">
@@ -24,7 +25,6 @@
 
     </div>
 
-    <!-- TOP 5 + STUPČASTI PRIKAZ -->
     <div class="card mt-4 p-3">
 
         <h5>Top 5 najprodavanijih artikala</h5>
