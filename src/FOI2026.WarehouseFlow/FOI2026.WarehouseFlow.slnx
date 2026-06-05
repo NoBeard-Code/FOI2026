@@ -1,4 +1,7 @@
 <Solution>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
   <Project Path="FOI2026.WarehouseFlow.Infrastructure/FOI2026.WarehouseFlow.Infrastructure.csproj" />
   <Project Path="FOI2026.WarehouseFlow.Services.Tests/FOI2026.WarehouseFlow.Services.Tests.csproj" Id="51f9daa9-d37b-48e6-804d-767b0a1ae233" />
   <Project Path="FOI2026.WarehouseFlow.Services/FOI2026.WarehouseFlow.Services.csproj" Id="2b026954-ff68-4712-9dca-2f15ee70f3d8" />

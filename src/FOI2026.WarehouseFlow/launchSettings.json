@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "foi2026.warehouseflow.web": "StartDebugging"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+services:
+  foi2026.warehouseflow.web:
+    image: ${DOCKER_REGISTRY-}foi2026warehouseflowweb
+    build:
+      context: .
+      dockerfile: FOI2026.WarehouseFlow.Web/Dockerfile

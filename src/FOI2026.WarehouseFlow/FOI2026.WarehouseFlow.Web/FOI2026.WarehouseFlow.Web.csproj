@@ -7,6 +7,7 @@
     <UserSecretsId>aspnet-FOI2026_WarehouseFlow_Web-29e475d8-c424-47b6-acf5-cb48c51ff24a</UserSecretsId>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
