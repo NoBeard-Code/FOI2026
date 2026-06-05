@@ -69,6 +69,10 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Partners
 
             sviPartneri = (await PartnerService.GetAllSuppliersAsync()).ToList();
             partneri = sviPartneri;
+
+            await PartnerService.DeleteSupplierAsync(id);
+
+            await Ucitaj();
         }
     }
 }

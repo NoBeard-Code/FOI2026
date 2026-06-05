@@ -52,6 +52,7 @@ builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPartnerRepository, PartnerRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 // Services
 builder.Services.AddScoped<ArticleService>();
@@ -60,6 +61,7 @@ builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<IStockHistoryRepository, StockHistoryRepository>();
 builder.Services.AddScoped<StockHistoryService>();
 builder.Services.AddScoped<PartnerService>();
+builder.Services.AddScoped<DashboardService>();
 
 
 var app = builder.Build();

@@ -1,0 +1,93 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+<div class="container mt-4">
+
+    <h3>Dashboard</h3>
+
+    <!-- KARTICE -->
+    <div class="row mt-3">
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h6>Ukupno artikala</h6>
+                <h3>@totalStock</h3>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h6>Vrijednost zaliha</h6>
+                <h3>@stockValue €</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TOP 5 + STUPČASTI PRIKAZ -->
+    <div class="card mt-4 p-3">
+
+        <h5>Top 5 najprodavanijih artikala</h5>
+
+        @if (topArticles != null && topArticles.Any())
+        {
+            foreach (var item in topArticles)
+            {
+                <div class="mb-3">
+
+                    <div class="d-flex justify-content-between">
+                        <span>@item.Name</span>
+                        <span>@item.Quantity</span>
+                    </div>
+
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-primary"
+                             style="width:@GetBarWidth(item.Quantity)%">
+                        </div>
+                    </div>
+
+                </div>
+            }
+        }
+        else
+        {
+            <p>Nema podataka.</p>
+        }
+
+    </div>
+
+    <div class="card mt-4 p-3">
+
+        <h5>Zadnja narudžba</h5>
+
+        @if (latestOrder != null)
+        {
+            <p><strong>ID narudžbe:</strong> @latestOrder.OrderId</p>
+
+            <p>
+                <strong>Partner:</strong>
+                @latestOrder.partner?.Name ?? "N/A"
+            </p>
+
+            <hr />
+
+            <strong>Stavke:</strong>
+
+            <ul>
+                @foreach (var item in latestOrder.OrderItems)
+                {
+                    <li>
+                        @item.Article?.Name -
+                        Količina: @item.Quantity -
+                        Cijena: @item.Price €
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>Nema narudžbi.</p>
+        }
+
+    </div>
+</div>

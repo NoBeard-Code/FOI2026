@@ -19,6 +19,8 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Partners
 
         private bool uspjeh = false;
         private string greska = string.Empty;
+        private string? successMessage;
+        private string? errorMessage;
 
         private async Task Spremi()
         {
@@ -50,7 +52,7 @@ namespace FOI2026.WarehouseFlow.Web.Components.Features.Partners
 
             uspjeh = true;
 
-            Navigation.NavigateTo("/suppliers");
+            await PartnerService.AddSupplierAsync(partner);
         }
     }
 }
