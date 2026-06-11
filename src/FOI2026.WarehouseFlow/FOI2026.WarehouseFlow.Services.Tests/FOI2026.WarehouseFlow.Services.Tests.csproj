@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FOI2026.WarehouseFlow.Services\FOI2026.WarehouseFlow.Services.csproj" />
+    <ProjectReference Include="..\FOI2026.WarehouseFlow.Web\FOI2026.WarehouseFlow.Web.csproj" />
   </ItemGroup>
 
 
